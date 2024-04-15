@@ -14,7 +14,7 @@
   <form @submit.prevent="AddnewUser">
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
-        <v-card-title>Agregar Nueva Usuario</v-card-title>
+        <v-card-title>Agregar Nuevo Usuario</v-card-title>
         <v-card-text>
           <div>
             <input-global title="" type="text" id="UserName" v-model="UsuarioAgr.user"
@@ -35,9 +35,12 @@
         </v-card-text>
         <v-card-actions>
           <!-- <div @click="showAlertAgrUserExit"> -->
-          <v-btn color="primary">
-            <global-btn btn_global="Regitrar" :stop-event="true" @click="CreateUserLo" />
-          </v-btn>
+          <v-btn color="primary" @click="CreateUserLo">Registrar</v-btn>
+
+          <!-- <v-btn color="primary">
+            <global-btn btn_global="Registrar" :stop-event="true" @click="CreateUserLo" />
+          </v-btn> -->
+
           <!-- </div> -->
           <!-- <v-btn color="primary" @click="agregarCredencial">Guardar</v-btn> -->
           <v-btn @click="dialog = false">Cancelar</v-btn>

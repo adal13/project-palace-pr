@@ -3,13 +3,13 @@
     <h1 class="text">The Palace Company</h1>
     <div class="aling">
       <div v-if="dataStore.role === 'ADMIN'">
-        <router-link class=" styleLink" to="/Users">Users</router-link>
+        <router-link class=" styleLink" to="/Users">Usuarios</router-link>
       </div>
       <div v-if="dataStore.role === 'ADMIN'">
-        <router-link class="styleLink" to="/Credentials">Credentials</router-link>
+        <router-link class="styleLink" to="/Credentials">Credenciales</router-link>
       </div>
       <div v-if="dataStore.role === 'ADMIN'">
-        <router-link class="styleLink" to="/Responsible">Responsible</router-link>
+        <router-link class="styleLink" to="/Responsible">Responsables</router-link>
       </div>
       <globalBtn btn_global="Cerrar sesion" buttonClass="alingBtn" @click="logout" />
     </div>

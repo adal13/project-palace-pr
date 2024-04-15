@@ -16,20 +16,53 @@
             <!-- </div> -->
 
 
-            <v-icon icon="mdi-lock" color="#fff" size="30" />
+            <!-- <v-icon icon="mdi-lock" color="#fff" size="30" />
+    
             <input-global title="" name="Contraseña" v-model="loginDetails.password"
-                @update:value="newValue => updateI('password', newValue)" />
+                @update:value="newValue => updateI('password', newValue)" type="password" class="demo_text" />
             <div class="alingbutton">
                 <global-btn type="submit" btn_global="Iniciar sesion" />
             </div>
-            <p v-if="errorMessages">{{ errorMessages }}</p>
+
+            <p v-if="errorMessages">{{ errorMessages }}</p> -->
+
+            <v-icon icon="mdi-lock" color="#fff" size="30" /><br>
+            <div class="input-container">
+                <input-global title="" name="Contraseña" v-model="loginDetails.password" @update:value="updatePassword"
+                    :type="passwordFieldType" classInput="demo__text" />
+                <!-- <v-icon icon="mdi-eye" color="#fff" size="30" class="toggle-password"
+                    @click="togglePasswordVisibility" /> -->
+            </div>
+
+
+
+            <h1>ejemplos de inputs</h1>
+            <div class="input-container">
+                <v-icon icon="mdi-account" color="#fff" size="30" class="icon"></v-icon>
+                <div class="input-wrapper">
+                    <input-global title="" name="Nombre de usuario" v-model="loginDetails.user"
+                        @update:value="newValue => updateI('user', newValue)" />
+                </div>
+            </div>
+
+            <div class="input-container">
+                <v-icon icon="mdi-lock" color="#fff" size="30" />
+                <div class="input-wrapper">
+                    <!-- <input-global title="" name="Contraseña" v-model="loginDetails.password"
+                        @update:value="newValue => updateI('password', newValue)" type="password" class="demo_text" /> -->
+                    <input-global title="" name="Contraseña" v-model="loginDetails.password"
+                        @update:value="updatePassword" :type="passwordFieldType" classInput="demo__text" />
+                </div>
+            </div>
+            <v-icon icon="mdi-eye" color="#fff" size="30" @click="togglePasswordVisibility" class="toggle-password" />
+
         </form>
     </div>
 </template>
 
 <script setup lang="ts">
 import { inputGlobal } from '../importFile';
-import { globalBtn } from '../importFile';
+// import { globalBtn } from '../importFile';
 import * as bcrypt from 'bcryptjs'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -48,7 +81,7 @@ const loginDetails = ref<inicioSesion>({
     password: '',
 })
 
-const errorMessages = ref('')
+// const errorMessages = ref('')
 
 const router = useRouter()
 
@@ -117,6 +150,22 @@ const updateI = (fielName: string, value: string) => {
     loginDetails.value = { ...loginDetails.value, [fielName]: value }
     // console.log('datos agregados', loginDetails.value)
 }
+
+// variable del ojito 
+
+// const loginDetails = {
+//   password: ''
+// };
+
+const passwordFieldType = ref('password');
+
+const updatePassword = (newValue: string) => {
+    loginDetails.value.password = newValue;
+};
+
+const togglePasswordVisibility = () => {
+    passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
+};
 
 </script>
 
@@ -261,12 +310,134 @@ form {
 }
 
 
-/* .input-container {
+
+/* .demo__text {
+    position: absolute;
+    left: 0;
+    top: 0;
     display: flex;
+    justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    will-change: opacity, transform;
+    pointer-events: none;
 }
 
-.input-container .icon {
-    margin-right: 10px;
+.demo.s--processing .demo__text {
+    transition: all 0.4s
+}
+
+.demo__text--step-0 {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.demo__text-dots::before,
+.demo__text-dots:after {
+    content: ".";
+    opacity: 0;
+}
+
+@keyframes dotAnimation {
+
+    10%,
+    90% {
+        opacity: 0;
+
+    }
+
+    40%,
+    60% {
+        opacity: 1;
+    }
+}
+
+@keyframes dotAnimation {
+
+    10%,
+    90% {
+        opacity: 0;
+    }
+
+    40%,
+    60% {
+        opacity: 1;
+    }
 } */
+
+
+/* .input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+} */
+/* 
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+} */
+/* 
+.input-container {
+    position: absolute;
+} */
+.input-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+
+
+/* .password-input-container {
+    position: relative; */
+/* display: flex; */
+/* align-items: center; */
+/* width: 10%; */
+/* } */
+
+/* .demo__text {
+    position: relative;
+    width: 100%;
+    padding-right: 40px;
+}
+
+.demo__text::after {
+    content: ".";
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+}
+
+.demo.s--processing .demo__text {
+    transition: all 0.4s;
+}
+
+.demo__text--step-0 {
+    opacity: 1;
+}
+
+.demo__text-dots::before,
+.demo__text-dots:after {
+    content: ".";
+    opacity: 0;
+} */
+
+.input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
 </style>
