@@ -11,7 +11,7 @@
     <v-menu activator="#menu-activator">
         <v-list>
             <v-list-item v-for="(secret, index) in dataStore.dataSecretIAM" :key="index" @click="toggleInfo">
-                <v-list-item-title @click="toggleInfo; handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
+                <v-list-item-title @click="toggleInfo, handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
                     index + 1
                 }}</v-list-item-title>
             </v-list-item>
