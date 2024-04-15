@@ -9,52 +9,31 @@
 
         <form @submit.prevent="handleLogin" class="cristal">
             <h2>Bienvenido</h2>
-            <!-- <div class="input-container"> -->
-            <v-icon icon="mdi-account" color="#fff" size="30" class="icon"></v-icon>
-            <input-global title="" name="Nombre de usuario" v-model="loginDetails.user"
-                @update:value="newValue => updateI('user', newValue)" />
-            <!-- </div> -->
 
-
-            <!-- <v-icon icon="mdi-lock" color="#fff" size="30" />
-    
-            <input-global title="" name="Contraseña" v-model="loginDetails.password"
-                @update:value="newValue => updateI('password', newValue)" type="password" class="demo_text" />
-            <div class="alingbutton">
-                <global-btn type="submit" btn_global="Iniciar sesion" />
-            </div>
-
-            <p v-if="errorMessages">{{ errorMessages }}</p> -->
-
-            <v-icon icon="mdi-lock" color="#fff" size="30" /><br>
+            <v-icon icon="mdi-account" color="#fff" size="30" class="icon" />
             <div class="input-container">
-                <input-global title="" name="Contraseña" v-model="loginDetails.password" @update:value="updatePassword"
-                    :type="passwordFieldType" classInput="demo__text" />
-                <!-- <v-icon icon="mdi-eye" color="#fff" size="30" class="toggle-password"
-                    @click="togglePasswordVisibility" /> -->
-            </div>
-
-
-
-            <h1>ejemplos de inputs</h1>
-            <div class="input-container">
-                <v-icon icon="mdi-account" color="#fff" size="30" class="icon"></v-icon>
                 <div class="input-wrapper">
                     <input-global title="" name="Nombre de usuario" v-model="loginDetails.user"
                         @update:value="newValue => updateI('user', newValue)" />
                 </div>
             </div>
 
+            <v-icon icon="mdi-lock" color="#fff" size="30" />
             <div class="input-container">
-                <v-icon icon="mdi-lock" color="#fff" size="30" />
                 <div class="input-wrapper">
-                    <!-- <input-global title="" name="Contraseña" v-model="loginDetails.password"
-                        @update:value="newValue => updateI('password', newValue)" type="password" class="demo_text" /> -->
                     <input-global title="" name="Contraseña" v-model="loginDetails.password"
                         @update:value="updatePassword" :type="passwordFieldType" classInput="demo__text" />
+                    <!-- <v-icon icon="mdi-eye" color="#fff" size="30" class="password-icon"
+                        @click="togglePasswordVisibility" /> -->
+
+                    <!-- ejemplo de icono de contraseña  -->
+                    <v-icon :icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'" color="#fff" size="30"
+                        @click="togglePasswordVisibility" class="password-icon" />
                 </div>
             </div>
-            <v-icon icon="mdi-eye" color="#fff" size="30" @click="togglePasswordVisibility" class="toggle-password" />
+            <div class="alingbutton">
+                <global-btn type="submit" btn_global="INICIAR SESIÓN" />
+            </div>
 
         </form>
     </div>
@@ -62,7 +41,7 @@
 
 <script setup lang="ts">
 import { inputGlobal } from '../importFile';
-// import { globalBtn } from '../importFile';
+import { globalBtn } from '../importFile';
 import * as bcrypt from 'bcryptjs'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -118,7 +97,7 @@ const handleLogin = async () => {
                 // console.log("auth, login", role)
 
                 const roleRoutes = {
-                    'ADMIN': '/users',
+                    'ADMIN': '/Home',
                     'INVITADO': '/clientView'
                 };
 
@@ -153,10 +132,6 @@ const updateI = (fielName: string, value: string) => {
 
 // variable del ojito 
 
-// const loginDetails = {
-//   password: ''
-// };
-
 const passwordFieldType = ref('password');
 
 const updatePassword = (newValue: string) => {
@@ -166,6 +141,12 @@ const updatePassword = (newValue: string) => {
 const togglePasswordVisibility = () => {
     passwordFieldType.value = passwordFieldType.value === 'password' ? 'text' : 'password';
 };
+
+const passwordVisible = false
+// togglePasswordVisibility() {
+//   passwordVisible = !this.passwordVisible;
+//     this.passwordFieldType = this.passwordVisible ? 'text' : 'password';
+// },
 
 </script>
 
@@ -281,7 +262,20 @@ form {
 }
 
 .alingbutton {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    background-color: #ccc;
+    color: #145474;
+
+}
+
+.alingbutton global-btn {
+
+    width: 100%;
+    /* El botón ocupará todo el ancho del contenedor */
+    max-width: 200px;
+    /* Esto limita el ancho máximo del botón para que no sea demasiado ancho en pantallas grandes */
 }
 
 .global-btn ::btn_global {
@@ -385,59 +379,23 @@ form {
 .input-container {
     position: absolute;
 } */
+
 .input-container {
     display: flex;
     align-items: center;
-    position: relative;
 }
-
-
-
-/* .password-input-container {
-    position: relative; */
-/* display: flex; */
-/* align-items: center; */
-/* width: 10%; */
-/* } */
-
-/* .demo__text {
-    position: relative;
-    width: 100%;
-    padding-right: 40px;
-}
-
-.demo__text::after {
-    content: ".";
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-}
-
-.demo.s--processing .demo__text {
-    transition: all 0.4s;
-}
-
-.demo__text--step-0 {
-    opacity: 1;
-}
-
-.demo__text-dots::before,
-.demo__text-dots:after {
-    content: ".";
-    opacity: 0;
-} */
 
 .input-wrapper {
     flex: 1;
     position: relative;
 }
 
-.toggle-password {
+.password-icon {
     position: absolute;
     right: 10px;
-    top: 50%;
+    /* ajusta la posición según tu diseño */
+    top: 40%;
+    /* ajusta la posición verticalmente según tu diseño */
     transform: translateY(-50%);
-    cursor: pointer;
 }
 </style>
