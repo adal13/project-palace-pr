@@ -9,6 +9,7 @@
     /* Bundler mode */
     "moduleResolution":"node",
     "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -16,11 +17,11 @@
     "allowJs": true,
 
     /* Linting */
-    "strict": false,
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    // "noImplicitAny": false
+    "noImplicitAny": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue","*.d.ts", "*.tsx", "stories/**/*.ts", "tests/**/*.ts","*.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

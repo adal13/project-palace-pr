@@ -3,7 +3,7 @@
         <h1>Responsables</h1>
     </div>
     <v-expansion-panels>
-        <v-expansion-panel v-for="(result, index) in dataStore.dataResponsible[0]" :key="index"
+        <v-expansion-panel v-for="(result, index) in dataStore.dataResponsible" :key="index"
             @click="togglePanel(result)">
             <template v-slot:title>
                 <v-row align="center" justify="space-between">
@@ -33,16 +33,16 @@
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title v-if="credential.status !== undefined">Estado: {{
-            credential.status }}</v-list-item-title>
+                                        credential.status }}</v-list-item-title>
                                     <v-list-item-title v-else>Credential: 0</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
 
                             <v-list-item>
                                 <v-list-item-content>
-                                    <v-list-item-title v-if="credential.date_delete !== undefined">Fecha de expiracion:
+                                    <v-list-item-title v-if="credential.data_delete !== undefined">Fecha de expiracion:
                                         {{
-            credential.date_delete }}</v-list-item-title>
+                                            credential.data_delete }}</v-list-item-title>
                                     <v-list-item-title v-else>Credential: 0</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>
@@ -65,18 +65,19 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import { usedataStore } from '../../store/datoUsuario';
 import { Amplify } from 'aws-amplify';
 import * as  API from 'aws-amplify/api';
 import amplifyConfig from '../../ampliconfig';
-import { userResponsible } from '../../types/index'
+// import { credential, userResponsible } from '../../types/index'
 // import { DocumentType } from '@aws-amplify/core/internals/utils';
 
 Amplify.configure(amplifyConfig)
 const dataStore = usedataStore()
 
-const usersResponsible = ref<userResponsible[]>([])
+// const usersResponsible = ref<userResponsible[]>([])
+// const usersCrendtial = ref<credential[]>([])
 
 // const togglePanel = (result: any) => {
 //     result.expanded = !result.expanded;
@@ -93,9 +94,6 @@ const togglePanel = (credential: any) => {
     credential.expanded = !credential.expanded; // Cambia el estado expanded al hacer clic en el nombre
 };
 
-// let resultRes: string | number | boolean | DocumentType[] | { [prop: string]: DocumentType; } | null;
-// let resultCredential: string | number | boolean | DocumentType[] | { [prop: string]: DocumentType; } | null;
-
 // obtencion de usuariosIAM desde JSON
 const getResponsible = async () => {
     try {
@@ -109,16 +107,32 @@ const getResponsible = async () => {
             }
         });
         const { body } = await getUser.response;
-        const data = await body?.json();
-        console.log('getuserRes', data);
+        // const data = await body?.json();
+        // const credential = await body?.json();
 
-        if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
-            usersResponsible.value = data.data as unknown as userResponsible[];
-            dataStore.userResponsible(usersResponsible.value)
+        // if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
 
-            console.log("salkdfjkldsjfas", dataStore.dataResponsible)
+        //     usersResponsible.value = data.data as unknown as userResponsible[]; 
+
+        //     dataStore.userResponsible(data.data)
+
+        // } else {
+        // }
+        const bodyText = await body.text();
+
+        // Intentar parsear el contenido como JSON
+        let data;
+        try {
+            data = JSON.parse(bodyText);
+        } catch (error) {
+            console.error('Error al parsear el cuerpo de la respuesta JSON:', error);
+        }
+
+        // Verificar y almacenar los datos
+        if (Array.isArray(data?.data)) {
+            dataStore.userResponsible(data.data);
         } else {
-            usersResponsible.value = []
+            console.error('Datos de usuario responsables no válidos:', data);
         }
     } catch (error) {
         console.log('sin obtener datos', error);

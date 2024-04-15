@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { IduserIAM, IdUsuario, secretUserIAM, userResponsible } from '../types';
+import { credential, IduserIAM, IdUsuario, secretUserIAM, userResponsible } from '../types';
 // import { IdUsuario } from '../types';
 // import Cookies from 'js-cookie'
 import Cookies from 'js-cookie';
@@ -28,6 +28,7 @@ export const usedataStore = defineStore({
         }],
         // datos de usuarios responsables 
         dataResponsible: [] as userResponsible[],
+        dataCredential: [] as credential[],
 
         // creacion de usuarios IAM 
         creatUserIAM: [{ UserName: '' }],
@@ -173,8 +174,19 @@ export const usedataStore = defineStore({
         //     })
         // },
 
-        userResponsible(inputValue) {
-            this.dataResponsible.push(inputValue)
+        // userResponsible(dataResponsible:userResponsible[], dataCredential:credential[]) {
+        //     this.dataResponsible.push(inputValue)
+        // },
+
+        userResponsible(data: userResponsible[]) {
+            this.dataResponsible = data;
+        },
+
+        addCredentials(userId: number, newCredential: credential) {
+            const user = this.dataResponsible.find(user => user.id === userId);
+            if (user) {
+                user.credential.push(newCredential);
+            }
         },
 
 
@@ -188,9 +200,9 @@ export const usedataStore = defineStore({
 
         },
         //   guardar datos de nuevas credenciales 
-        saveDataIAM(userName: string) {
+        saveDataIAM(UserName: string) {
             this.creatUserIAM.push({
-                userName,
+                UserName,
             })
 
         },
@@ -200,20 +212,24 @@ export const usedataStore = defineStore({
                 UserName,
             })
         },
-        iniciarSesion(usuario: null) {
-            // checar dataUser , puedo que se camibie por datosUsuario 
-            const { rol, ...dataUsers } = iniciarSesion(usuario);
 
-            this.setUsuario(dataUsers);
-            this.setRol(rol);
-        },
+
+        // iniciarSesion(usuario: null) {
+        //     // checar dataUser , puedo que se camibie por datosUsuario 
+        //     const { rol, ...dataUsers } = iniciarSesion(usuario);
+
+        //     this.setUsuario(dataUsers);
+        //     this.setRol(rol);
+        // },
+
+
         setUsuario(usuario: null) {
             this.usuario = usuario
         },
 
-        setRol(rol: null) {
-            this.rol = rol;
-        },
+        // setRol(rol: null) {
+        //     this.role = rol;
+        // },
 
         setLoggedIn(role: string, id_user: number) {
             // this.isLoggedIn = isLoggedIn
@@ -221,10 +237,10 @@ export const usedataStore = defineStore({
             this.id_user = id_user.toString()
             if (role) {
                 this.role = role;
-                Cookies.set('role', role, { SameSite: 'None' }, { expires: 1 });
+                Cookies.set('role', role, { SameSite: 'None', expires: 1 });
             }
             Cookies.set('id', id_user.toString(), { sameSite: 'None', secure: true })
-            Cookies.set('isLoggedIn', 'true', { expires: 1 }, { sameSite: 'None', secure: true });
+            Cookies.set('isLoggedIn', 'true', { expires: 1, sameSite: 'None', secure: true });
         },
 
         logout() {
