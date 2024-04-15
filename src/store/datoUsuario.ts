@@ -26,7 +26,7 @@ export const usedataStore = defineStore({
             secretAccess: '',
             dateExpiration: '',
         }],
-           // datos de usuarios responsables 
+        // datos de usuarios responsables 
         dataResponsible: [] as userResponsible[],
 
         // creacion de usuarios IAM 
@@ -40,7 +40,7 @@ export const usedataStore = defineStore({
         dataEditIAM: [] as IduserIAM[],
         dataSecretIAM: [] as secretUserIAM[],
 
-     
+
 
         //  registrar credencial de usuario IAM 
         dataIAM: [{
@@ -164,20 +164,20 @@ export const usedataStore = defineStore({
         //     this.dataResponsible.push({
         //         user,
         //         credential: [
-                    
+
         //             status,
         //             date_delete,
         //         ]
-                
-                
+
+
         //     })
         // },
-           
-        userResponsible(inputValue ) {
+
+        userResponsible(inputValue) {
             this.dataResponsible.push(inputValue)
         },
 
-        
+
         CreadwhitOutCredentialIAM(UserName: string, UserId: string) {
             this.whitOutCred.push({
                 UserId,
