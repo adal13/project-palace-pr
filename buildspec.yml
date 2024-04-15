@@ -1,0 +1,39 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm install -g typescript
+      - npm install -g @aws-amplify/cli
+      - npm install
+
+  pre_build:
+    commands:
+      # - amplify configure  
+
+  build:
+    commands:
+      - npm run build
+      # - npm test
+       
+  post_build:
+    commands:
+      - mv dist/* ./
+      - rm -r dist
+      - echo "Post-build commands" 
+
+artifacts:
+  files: 
+    - 'index.html'
+    - 'assets/**/*'
+    # - 'dist/**/*'
+    # - '*.js'
+    # - '*.css'
+  base-directory: '.'
+  discard-paths: no 
+
+
+
+  
