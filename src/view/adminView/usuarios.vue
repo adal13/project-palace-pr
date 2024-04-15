@@ -3,7 +3,7 @@
     {{ mensajeCredUserIAMs }}
   </v-alert>
 
-  <h1 class="textUser">Usuarios</h1>
+  <h1>Usuarios</h1>
   <global-btn btn_global="Agregar usuario" buttonClass="styleBUser" dark @click="dialog = true" />
   <div>
     <tablegbl :columns="columns" :data="dataTable" :showButtonEditar="true" :showButtonEliminar="true"

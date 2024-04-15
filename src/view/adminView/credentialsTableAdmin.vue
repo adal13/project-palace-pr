@@ -3,7 +3,7 @@
       {{ mensajeCredUserIAMs }}
    </v-alert>
 
-   <h1>Usuarios IAM</h1>
+   <h1>Credenciales</h1>
    <router-link to="/AgrNewCred">
       <global-btn btn_global="Agregar credencial" buttonClass="agrBtnCred" dark />
    </router-link>
@@ -29,8 +29,8 @@
                   <select v-model="selectedUserName" id="user" @change="fillCreatCred">
                      <option value="">Seleccione un usuario...</option>
                      <option v-for="(dato, index) in userListWhitoutCred" :key="index" :value="dato.UserName">{{
-                        dato.UserName
-                     }}
+      dato.UserName
+   }}
                      </option>
                   </select>
                </div>

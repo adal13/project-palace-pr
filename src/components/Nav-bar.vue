@@ -3,7 +3,7 @@
     <h1 class="text">The Palace Company</h1>
     <div class="aling">
       <div v-if="dataStore.role === 'ADMIN'">
-        <router-link class=" styleLink" to="/Users">Usuarios</router-link>
+        <router-link class=" styleLink" to="/Home">Usuarios</router-link>
       </div>
       <div v-if="dataStore.role === 'ADMIN'">
         <router-link class="styleLink" to="/Credentials">Credenciales</router-link>

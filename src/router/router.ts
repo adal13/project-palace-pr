@@ -11,14 +11,8 @@ const routes: RouteRecordRaw[] = [
     meta: { showNavbar: false },
   },
   {
-    path: '/Home',
+   path: '/Home',
     name: 'home',
-    meta: { requiresAdmin: true, requiresAuth: true, showNavbar: true, role: 'ADMIN' },
-    component: () => import('../view/home.vue'),
-  },
-  {
-    path: '/users',
-    name: 'usuarios',
     meta: { requiresAdmin: true, requiresAuth: true, showNavbar: true, role: 'ADMIN' },
     component: () => import('../view/adminView/usuarios.vue')
   },
