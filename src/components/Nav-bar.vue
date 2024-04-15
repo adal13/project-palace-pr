@@ -8,7 +8,7 @@
       <div v-if="dataStore.role === 'ADMIN'">
         <router-link class="styleLink" to="/Credentials">Credentials</router-link>
       </div>
-      <div>
+      <div v-if="dataStore.role === 'ADMIN'">
         <router-link class="styleLink" to="/Responsible">Responsible</router-link>
       </div>
       <globalBtn btn_global="Cerrar sesion" buttonClass="alingBtn" @click="logout" />

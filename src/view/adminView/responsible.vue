@@ -40,9 +40,8 @@
 
                             <v-list-item>
                                 <v-list-item-content>
-                                    <v-list-item-title v-if="credential.data_delete !== undefined">Fecha de expiracion:
-                                        {{
-                                            credential.data_delete }}</v-list-item-title>
+                                    <v-list-item-title v-if="credential.date_delete !== undefined">Fecha de expiracion:
+                                        {{ credential.date_delete }}</v-list-item-title>
                                     <v-list-item-title v-else>Credential: 0</v-list-item-title>
                                 </v-list-item-content>
                             </v-list-item>

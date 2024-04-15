@@ -86,6 +86,6 @@ export interface credential {
     id: number,
     iam_user_name: string,
     status: string,
-    data_delete: string,
+    date_delete: string,
     expanded?: boolean
 }
