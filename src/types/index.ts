@@ -20,7 +20,8 @@ export interface secretUserIAM {
     iam_user_name?: string,
     iam_access_key?: string,
     secret_access_key?: string,
-    status?: string
+    status?: string,
+    isVisible?: boolean;
 };
 export interface userWithOutCredential {
     UserId?: string | number,

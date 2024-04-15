@@ -20,7 +20,7 @@
 
 
 import { ref } from "vue";
-import { errorMessages } from "./errors";
+import { errorMessages } from "../helper/errors";
 
 const mensajeCredUserIAMs = ref("");
 const mostrarMensajeCredUserIAMs = ref<boolean>(false);

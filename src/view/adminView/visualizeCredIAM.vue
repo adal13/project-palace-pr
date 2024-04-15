@@ -11,16 +11,16 @@
     <v-menu activator="#menu-activator">
         <v-list>
             <v-list-item v-for="(secret, index) in dataStore.dataSecretIAM" :key="index" @click="toggleInfo">
-                <v-list-item-title @click="toggleInfo, handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
+                <v-list-item-title @click="handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
                     index + 1
-                }}</v-list-item-title>
+                    }}</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
 
 
 
-    <!-- <v-btn v-if="dataStore.role === 'ADMIN'" class="btn_delete" color="red" -->
+    <!-- <v-btn class="btn_delete" color="red" -->
     <v-btn class="btn_delete" color="red" @click="handleDeleteSelectedKeys">Eliminar</v-btn>
 
     <!-- <v-btn v-if="dataStore.role === 'ADMIN'" color="yellow" btn_global="Rotar" class="RotDate" -->
@@ -28,8 +28,8 @@
 
     <div class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
         <!-- <v-btn v-if="dataStore.role === 'ADMIN'" :color="buttonColor(index)" v-show="activeIndex === index" -->
-        <v-btn :color="buttonColor(index)" v-show="activeIndex === index" class="ActDate"
-            @click="ActDesctAccesKey(index)" :disabled="!secret.secret_access_key">{{ secret.status ===
+        <v-btn :color="buttonColor(index)" v-if="activeIndex === index" class="ActDate"
+            @click="ActDesctAccesKey(index)">{{ secret.status ===
                 'Active' ?
                 'Desactivar' : 'Activar' }}</v-btn>
     </div>
@@ -88,7 +88,7 @@ import { Amplify } from 'aws-amplify';
 import { onMounted, ref } from 'vue';
 import { globalBtn } from '../../importFile';
 import { IduserIAM, secretUserIAM } from '../../types/index';
-import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../mensaje'
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
 
 Amplify.configure(amplifyConfig);
 
@@ -100,6 +100,16 @@ const activeIndex = ref(-1);
 const showMenu = ref(false);
 const selectedKey = ref<string | null>(null);
 // const selectedKey = ref<string[]>([]);
+
+// const ActDesctAccesKey = (index: number) => {
+//     // Eliminar la clave aquí...
+//     // Supongamos que eliminas la clave de dataSecretIAM[index]
+//     secretIAM.value.splice(index, 1);
+
+//     // Ocultar el elemento correspondiente
+//     // Supongamos que cada elemento de dataSecretIAM tiene una propiedad isVisible
+//     secretIAM.value[index].isVisible = false;
+// };
 
 function handleShow(accessKey: string | undefined, index: number) {
     // dataStore.reset()

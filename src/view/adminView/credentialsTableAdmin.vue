@@ -82,7 +82,7 @@ import { CredentRegistIAM } from '../../types';
 import { userWithOutCredential } from '../../types'
 import { inputGlobal } from '../../importFile';
 import router from '../../router/router';
-import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../mensaje'
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
 
 
 Amplify.configure(amplifyConfig)
