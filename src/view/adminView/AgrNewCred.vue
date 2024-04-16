@@ -9,7 +9,7 @@
 
         <form @submit.prevent="AgrnewCredUserIAM">
             <div>
-                <div class="select-container">
+                <div>
                     <select v-model="selectedUserName" id="user" @change="filterAgrCredUser" class="input-select">
                         <option value="">Seleccione un usuario IAM...</option>
                         <option v-for="datos in userListRegIAM" :key="datos.UserName" :value="datos.UserName">{{
@@ -22,20 +22,20 @@
                 <input-global title="" name="Id de usuario " :value="registCredential.UserId"
                     @update:value="newValue => updateAgrCred('UserId', newValue)" style="pointer-events: none;" />
 
-                <input-global title="" name=" Llave de accesos IAM" :value="registCredential.accessKeyId"
+                <input-global title="" name=" Llave de acceso IAM" :value="registCredential.accessKeyId"
                     @update:value="newValue => updateAgrCred('accessKeyId', newValue)" style="pointer-events: none;" />
 
                 <input-global title="" name="Llave secreta" :value="registCredential.secretAccess"
                     @update:value="newValue => updateAgrCred('secretAccess', newValue)" style="pointer-events: none;" />
 
-                <input-global title="" name="Fecha de expiracion" :value="registCredential.dateExpiration"
+                <input-global title="" name="Fecha de expiración" :value="registCredential.dateExpiration"
                     @update:value="newValue => updateAgrCred('dateExpiration', newValue)"
                     style="pointer-events: none;" />
 
 
 
                 <!-- asignacion de usuario para agregar sus credenciales  -->
-                <h2>¿Asignar a...?</h2>
+                <h2>Asignar responsable</h2>
                 <div>
                     <select v-model="selectedUserGuest" id="user" @change="filterUserGuest" class="input-select">
                         <option value="">Seleccione un usuario...</option>
@@ -44,7 +44,7 @@
     }}
                         </option>
                     </select>
-                    <input-global title="" name="id de usuario" :value="registUser.id"
+                    <input-global title="" name="Id de usuario" :value="registUser.id"
                         @update:value="newValue => updateUserGuest('id', newValue)" style="pointer-events: none;" />
                 </div>
                 <div>
@@ -111,11 +111,9 @@ async function fetchUsersData() {
         });
         const { body } = await getUserIAM.response;
         const data = await body?.json();
-        console.log('getUserIAM', data);
         if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
 
             userListRegIAM.value = data.data as unknown as CredentRegistIAM[];
-            // console.log('usuarios con credenciales', userListRegIAM.value)
 
             dataStore.clearUserIds();
             userListRegIAM.value.forEach((IAMcredential) => {
@@ -131,7 +129,6 @@ async function fetchUsersData() {
             userListRegIAM.value = []
         }
     } catch (error) {
-        // console.error('sin obtener el enlistado de credencial :', error);
         console.error('Error fetching users:', error);
     }
 };
@@ -149,7 +146,6 @@ const filterAgrCredUser = () => {
 };
 
 onMounted(() => {
-    // registerCredIAMuser()
     fetchUsersData();
 });
 function AgrnewCredUserIAM() {
@@ -186,13 +182,10 @@ async function getGuestUsers() {
         });
         const { body } = await getUser.response;
         const data = await body?.json();
-        console.log('obtencion de datos de usuarios normales', data);
         if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
 
             userGuest.value = data.data as unknown as IdUsuario[];
-            // console.log('usuarios con credenciales', userListRegIAM.value)
 
-            // dataStore.clearUserIds();
             userGuest.value.forEach((guestUser) => {
                 dataStore.userJson(
                     guestUser.id as string,
@@ -206,7 +199,6 @@ async function getGuestUsers() {
             userGuest.value = []
         }
     } catch (error) {
-        // console.error('sin obtener el enlistado de credencial :', error);
         console.error('Error fetching users:', error);
     }
 };
@@ -229,12 +221,9 @@ const filterUserGuest = () => {
 };
 const updateUserGuest = (fielName: string, value: string) => {
     registUser.value = { ...registUser.value, [fielName]: value }
-    console.log('datos agregados', registUser.value)
 }
 
 
-
-// metod put para enviar los datos para la asignacion de usuarios IAM por cada usuario local
 const registerCredIAMuser = async () => {
     try {
         const response = await API.put({
@@ -284,7 +273,6 @@ form {
     background-color: white;
     box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.2);
     text-transform: none;
-    /* font-family: Arial; */
 }
 
 form:hover {
@@ -332,18 +320,4 @@ form:hover {
     background-color: #fff;
     color: #145474;
 }
-
-
-
-
-/* clases de prueba  */
-
-.select-container {
-    flex: 1;
-    /* Toma el espacio restante disponible */
-}
-
-/* .input-select {
-    width: 100%;
-} */
 </style>

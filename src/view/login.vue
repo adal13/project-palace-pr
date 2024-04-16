@@ -1,11 +1,5 @@
 <template>
     <div class="body">
-        <!-- simulacio de cargar  -->
-        <div id="loader-container">
-            <div id="loader"></div>
-        </div>
-
-
         <div class="img_palace">
             <h2 class="logo-text">Bienvenido</h2>
 
@@ -19,10 +13,6 @@
                 <v-icon icon="mdi-account-circle" color="#fff" size="120" class="user-icon" />
             </div>
             <form @submit.prevent="handleLogin" class="cristal">
-
-                <!-- circulo arriba del login  -->
-
-
 
                 <v-icon icon="mdi-account" color="#fff" size="30" class="icon" />
                 <div class="input-container">
@@ -45,8 +35,14 @@
                 <div class="alingbutton">
                     <global-btn type="submit" btn_global="INICIAR SESIÓN" />
                 </div>
-
+                <span v-show="mostrarMensajeCredUserIAMs" :type="tipoDeAlerta" style="color: red;">
+                    {{ mensajeCredUserIAMs }}
+                </span>
             </form>
+        </div>
+        <!-- simulacio de cargar  -->
+        <div id="loader-container">
+            <div id="loader"></div>
         </div>
     </div>
 
@@ -65,25 +61,9 @@ import { Amplify } from 'aws-amplify';
 import { amplifyConfig } from '../importFile'
 import { usedataStore } from '../store/datoUsuario';
 import { onMounted } from 'vue'
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from './helper/mensaje'
 
 
-// simulacion de carga 
-const loaderContainer = ref<HTMLElement | null>(null);
-
-onMounted(() => {
-    loaderContainer.value = document.getElementById('loader-container');
-
-    if (loaderContainer.value) {
-        // Mostrar la barra de carga al 100% al cargar la página
-        loaderContainer.value.style.display = 'block';
-        // Simular el tiempo de carga
-        setTimeout(() => {
-            if (loaderContainer.value) {
-                loaderContainer.value.style.display = 'none'; // Ocultar la barra de carga
-            }
-        }, 2000); // Duración de la animación en milisegundos (en este ejemplo, 2 segundos)
-    }
-});
 
 Amplify.configure(amplifyConfig)
 const dataStore = usedataStore()
@@ -93,18 +73,15 @@ const loginDetails = ref<inicioSesion>({
     password: '',
 })
 
-// const errorMessages = ref('')
-
 const router = useRouter()
 
 const handleLogin = async () => {
     const hashedPassword = bcrypt.hashSync('password', 10)
-    console.log('hashedpassword', hashedPassword)
     const passwordMatch = bcrypt.compareSync(loginDetails.value.password, hashedPassword)
     console.log('passwordMatch', passwordMatch)
 
     const authenticated = false
-    console.log('tratando de enviar a otra pagina', authenticated)
+    console.log('Entrando', authenticated)
 
     let data: UserData | null = null;
 
@@ -126,8 +103,6 @@ const handleLogin = async () => {
                 const idUser = data?.data?.userDTO?.id
 
                 dataStore.setLoggedIn(role, idUser)
-
-                // console.log("auth, login", role)
 
                 const roleRoutes = {
                     'ADMIN': '/Home',
@@ -154,16 +129,15 @@ const handleLogin = async () => {
 
     } catch (errorMessages) {
         errorMessages = 'Nombre del usuario y/o contraseña incorrecta';
-        // alert(errorMessages)
+        mostrarMensajeTempralCredUserIAMs('messageAuthError', 'error')
+
     }
 };
 
 const updateI = (fielName: string, value: string) => {
     loginDetails.value = { ...loginDetails.value, [fielName]: value }
-    // console.log('datos agregados', loginDetails.value)
 }
 
-// variable del ojito 
 
 const passwordFieldType = ref('password');
 
@@ -178,10 +152,23 @@ const togglePasswordVisibility = () => {
 const passwordVisible = false
 
 
-// togglePasswordVisibility() {
-//   passwordVisible = !this.passwordVisible;
-//     this.passwordFieldType = this.passwordVisible ? 'text' : 'password';
-// },
+// simulacion de carga 
+const loaderContainer = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    loaderContainer.value = document.getElementById('loader-container');
+
+    if (loaderContainer.value) {
+        // Mostrar la barra de carga al 100% al cargar la página
+        loaderContainer.value.style.display = 'block';
+        // Simular el tiempo de carga
+        setTimeout(() => {
+            if (loaderContainer.value) {
+                loaderContainer.value.style.display = 'none'; // Ocultar la barra de carga
+            }
+        }, 2000); // Duración de la animación en milisegundos (en este ejemplo, 2 segundos)
+    }
+});
 
 </script>
 
@@ -190,16 +177,14 @@ const passwordVisible = false
 #loader-container {
     width: 100%;
     height: 4px;
-    /* Altura de la barra de carga */
     background-color: #ddd;
-    /* Color de fondo de la barra de carga */
     position: fixed;
     top: 0;
     left: 0;
     z-index: 9999;
     display: none;
-    /* Ocultar la barra de carga inicialmente */
 }
+
 
 /* Estilos para la barra de carga animada */
 #loader {
@@ -222,11 +207,6 @@ const passwordVisible = false
         /* Ancho al 100% al final de la animación */
     }
 }
-
-
-
-
-
 
 
 
@@ -361,65 +341,6 @@ form {
 }
 
 
-
-/* .demo__text {
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transform: translateY(20px);
-    will-change: opacity, transform;
-    pointer-events: none;
-}
-
-.demo.text--processing .demo__text {
-    transition: all 0.4s
-}
-
-.demo__text--step-0 {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.demo__text-dots::before,
-.demo__text-dots:after {
-    content: ".";
-    opacity: 0;
-}
-
-@keyframes dotAnimation {
-
-    10%,
-    90% {
-        opacity: 0;
-
-    }
-
-    40%,
-    60% {
-        opacity: 1;
-    }
-}
-
-@keyframes dotAnimation {
-
-    10%,
-    90% {
-        opacity: 0;
-    }
-
-    40%,
-    60% {
-        opacity: 1;
-    }
-} */
-
-
 .input-container {
     display: flex;
     align-items: center;
@@ -437,37 +358,21 @@ form {
     transform: translateY(-50%);
 }
 
-/* circulo del login  */
 .cristal-container {
     position: relative;
     margin-bottom: 20px;
-    /* Espacio entre el círculo y el formulario */
 }
 
 .circle {
     position: absolute;
     top: -32px;
-    /* Posición del círculo encima del formulario */
     left: calc(50% - 32px);
-    /* Centrar horizontalmente el círculo */
     background-color: #333;
-    /* Color de fondo del círculo */
     border-radius: 50%;
-    /* Hacer el círculo */
     width: 80px;
-    /* Ancho del círculo */
     height: 80px;
-    /* Alto del círculo */
     display: flex;
     justify-content: center;
-    /* Centrar el contenido horizontalmente */
     align-items: center;
 }
-
-
-/* .user-icon {
-    font-size: 50px;
-} */
-
-/* Estilos adicionales para el formulario */
 </style>

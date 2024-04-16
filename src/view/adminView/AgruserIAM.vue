@@ -15,13 +15,11 @@
 <script lang="ts" setup>
 import { inputGlobal } from '../../importFile';
 import { globalBtn } from '../../importFile';
-// import { ref } from 'vue';
 import { usedataStore } from '../../store/datoUsuario';
 import amplifyConfig from '../../ampliconfig';
 import { Amplify } from 'aws-amplify';
 import * as  API from 'aws-amplify/api';
 import { ref } from 'vue';
-// import { IduserIAM } from '../../types';
 
 const dataStore = usedataStore();
 Amplify.configure(amplifyConfig);
@@ -63,7 +61,6 @@ function AddnewUser() {
             UserName: usuarioIAM.value.userName,
         }
     })
-    console.log('usuario agregado', AddnewUser)
 };
 </script>
 

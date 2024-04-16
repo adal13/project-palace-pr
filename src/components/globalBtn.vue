@@ -1,7 +1,5 @@
 <template>
-    <!-- <btn class="btn_glo_component" @click="onClick"> -->
     <button @click="handleClick, onClick" :class="buttonClass" class="btn_agr">{{ btn_global }}</button>
-    <!-- </btn> -->
 </template>
 
 <script setup lang="ts">
@@ -17,21 +15,17 @@ const props = defineProps({
     onClikBtn: () => void [Number, Function]
 });
 
-// const handleClick = ref <HTMLFormElement | null>(null)
 const handleClick = () => {
     props.onClikBtn;
 };
 const emit = defineEmits()
-// console.log(handleClick)
 
 emit('cambiar nombre', 'nuevo nombre del boton')
 const onClick = () => {
     if (props.stopEvent) {
         console.log('eventonclick');
-        // handleClick.value?.login
     } else {
         console.log('eventonclick no');
-        // myform.value?.submit();
     }
 };
 
@@ -41,7 +35,6 @@ const onClick = () => {
 .btn_agr {
     align-content: center;
     color: #333;
-    /* border: 2px solid #333; */
     border-radius: 5px;
     margin: 5px;
     padding-left: 10px;

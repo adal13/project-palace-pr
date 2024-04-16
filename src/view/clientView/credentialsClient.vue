@@ -1,5 +1,5 @@
 <template>
-    <H1>Esta vista es de usuarios IAM que visualizara el cliente</H1>
+    <H1>Credenciales </H1>
     <div>
         <tablegbl :columns="columns" :data="dataTable" :showButtonEditar="false" :showButtonEliminar="false"
             :showButtonVisualize="true" />
@@ -23,7 +23,6 @@ const usersIAMClient = ref<IduserIAM[]>([])
 // obtencion de usuariosIAM desde JSON
 async function getIAM() {
     try {
-        // enlistado de credenciales dependiendo de el usuario que inicio sesion 
         const userID = dataStore.id_user
         const getUser = await API.get({
             apiName: 'access_API',
@@ -36,11 +35,9 @@ async function getIAM() {
         });
         const { body } = await getUser.response;
         const data = await body?.json();
-        console.log('APPI', data);
 
         if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
             usersIAMClient.value = data.data as unknown as IduserIAM[];
-            console.log('iduser', usersIAMClient.value)
 
             dataStore.reset()
             usersIAMClient.value.forEach((IAM) => {
@@ -61,7 +58,6 @@ async function getIAM() {
         }
     } catch (error) {
         console.log('sin obtener datos', error);
-        console.log('sin obtener datos')
 
     } finally {
 

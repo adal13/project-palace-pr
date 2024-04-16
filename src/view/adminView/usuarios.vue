@@ -14,35 +14,33 @@
   <form @submit.prevent="AddnewUser">
     <v-dialog v-model="dialog" max-width="600px">
       <v-card>
-        <v-card-title>Agregar Nuevo Usuario</v-card-title>
+        <v-card-title>Agregar nuevo usuario</v-card-title>
         <v-card-text>
           <div>
             <input-global title="" type="text" id="UserName" v-model="UsuarioAgr.user"
-              @update:value="newValue => updateI('user', newValue)" name="nombre de usuario" />
+              @update:value="newValue => updateI('user', newValue)" name="Nombre de usuario"
+              :handle-blur="validateText" />
+            <span v-if="textErrorMessage" class="error-message">{{ textErrorMessage }}</span>
           </div>
           <div>
             <input-global title="" type="email" id="UserEmail" v-model="UsuarioAgr.email"
-              @update:value="newValue => updateI('email', newValue)" name="email" />
+              @update:value="newValue => updateI('email', newValue)" name="Correo electronico"
+              :handle-blur="validateEmail" />
+            <span v-if="emailErrorMessage" class="error-message">{{ emailErrorMessage }}</span>
           </div>
           <div>
             <input-global title="" type="password" id="password" v-model="UsuarioAgr.password"
-              @update:value="newValue => updateI('password', newValue)" name="password" />
+              @update:value="newValue => updateI('password', newValue)" name="Contraseña"
+              :handle-blur="validatePassword" />
+
+            <span v-if="passwordErrorMessage" class="error-message">{{ emailErrorMessage }}</span>
           </div>
           <div>
-            <!-- <UserRol type="text" id="UserRol" v-model="UsuarioAgr.role" /> -->
             <v-select title="" id="UserRol" :items="['admin', 'invitado']" v-model="selectedOption" />
           </div>
         </v-card-text>
         <v-card-actions>
-          <!-- <div @click="showAlertAgrUserExit"> -->
           <v-btn color="primary" @click="CreateUserLo">Registrar</v-btn>
-
-          <!-- <v-btn color="primary">
-            <global-btn btn_global="Registrar" :stop-event="true" @click="CreateUserLo" />
-          </v-btn> -->
-
-          <!-- </div> -->
-          <!-- <v-btn color="primary" @click="agregarCredencial">Guardar</v-btn> -->
           <v-btn @click="dialog = false">Cancelar</v-btn>
         </v-card-actions>
       </v-card>
@@ -56,14 +54,14 @@ import { tablegbl } from '../../importFile';
 import { globalBtn } from '../../importFile';
 import { Amplify } from 'aws-amplify';
 import * as  API from 'aws-amplify/api';
-// import * as amplifyconfig from '../../amplifyconfiguration.json';
 import { amplifyConfig } from '../../importFile'
 import { IdUsuario } from '../../types/index';
 import { computed, onMounted, ref } from 'vue';
 import { usedataStore } from '../../store/datoUsuario';
 import router from '../../router/router';
 import { inputGlobal } from '../../importFile';
-import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../mensaje'
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
+import { validateEmails, validatePasswords, validateTextOnlys } from '../helper/fieldValidate';
 
 Amplify.configure(amplifyConfig);
 const dataStore = usedataStore()
@@ -72,10 +70,33 @@ const userId = dataStore.id_user
 console.log('id de usuario local', userId)
 
 
+const email = ref('');
+const emailErrorMessage = ref('');
 
+const password = ref('');
+const passwordErrorMessage = ref('');
 
+const text = ref('');
+const textErrorMessage = ref('');
+
+const validateEmail = () => {
+  const result = validateEmails(email.value);
+  emailErrorMessage.value = result.isValid ? '' : result.message;
+};
+
+const validatePassword = () => {
+  const result = validatePasswords(password.value);
+  passwordErrorMessage.value = result.isValid ? '' : result.message;
+};
+
+const validateText = () => {
+  const result = validateTextOnlys(text.value);
+  textErrorMessage.value = result.isValid ? '' : result.message;
+};
 const idUsers = ref<IdUsuario[]>([])
-// llamar la API   
+
+
+
 async function getUsers() {
   try {
     const getUserTable = await API.get({
@@ -87,11 +108,9 @@ async function getUsers() {
     });
     const { body } = await getUserTable.response;
     const data = await body?.json();
-    console.log('appi', data);
 
     if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
       idUsers.value = data.data as unknown as IdUsuario[];
-      // dataStore.clearUserIds();
       dataStore.reset()
 
       idUsers.value.forEach((dataStoreJson) => {
@@ -109,14 +128,12 @@ async function getUsers() {
     }
   } catch (error) {
     console.log('sin obtener datos', error);
-    console.log('sin obtener datos')
 
   } finally {
 
   }
 };
 onMounted(getUsers);
-// dataStore.clearUserIds()
 
 const columns = [
   { label: 'Id', key: 'id' },
@@ -164,13 +181,11 @@ const handleDeleteJSON = async (Idusers: string | number) => {
       path: `/dev/users/delete/${Idusers}`,
     });
     await restOperation.response
-    // mensajeDel.value = 'Usuario eliminado';
 
     mostrarMensajeTempralCredUserIAMs('deleteUser', 'error')
 
     idUsers.value = idUsers.value.filter((row) => row.id !== Idusers)
     dataStore.reset()
-    // getUsers
 
     idUsers.value.forEach((getUser) => {
       dataStore.userGet(
@@ -218,13 +233,11 @@ const createUser = async () => {
       }
     });
 
-    // dataStore.reset()
     const response = await restOperation.response
 
     if (response.statusCode === 200) {
       const responseData = await response.body.json()
       const updateListUsers = await getUsers()
-      console.log('Usuario agregado');
 
       dialog.value = false;
       mostrarMensajeTempralCredUserIAMs('createUser', 'success')
@@ -245,13 +258,12 @@ const createUser = async () => {
 };
 const updateI = (fielName: string, value: string) => {
   UsuarioAgr.value = { ...UsuarioAgr.value, [fielName]: value }
-  console.log('datos agregados', UsuarioAgr.value)
 }
 
 const CreateUserLo = async (fielName: string, value: string) => {
   updateI(fielName, value)
   await createUser()
-  router.push('/Users')
+  router.push('/Home')
 
 }
 
@@ -268,11 +280,7 @@ function AddnewUser() {
   console.log(UsuarioAgr.value.password)
   console.log(UsuarioAgr.value.role)
 };
-
-
 </script>
-
-
 
 
 <style scoped>
@@ -323,14 +331,12 @@ function AddnewUser() {
 /* Estilos del contenido de la modal */
 .modal-content {
   align-items: center;
-  /* background-color: #fefefe; */
   margin: 10% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   max-width: 700px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  /* Sombra */
 }
 
 /* Estilos del botón para cerrar la modal */

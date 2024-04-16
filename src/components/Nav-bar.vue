@@ -29,7 +29,7 @@ const logout = () => {
 }
 </script>
 
-<style>
+<style scoped>
 body {
   height: 100%;
 }
@@ -41,7 +41,10 @@ body {
   -webkit-background-clip: text;
   display: flex;
   color: transparent;
-  margin-left: 40px;
+  margin-left: 10px;
+  text-transform: uppercase;
+  font-size: 27px;
+  letter-spacing: 2px;
 
 }
 
@@ -51,22 +54,18 @@ div {
   text-transform: uppercase;
   text-decoration: none;
   letter-spacing: 0.15em;
-  /* position: relative; */
 }
 
-/* 
-div:hover:after {
-  width: 100%;
-  left: 0;
-  background-color: aqua;
-} */
 
 .aling {
-  margin-left: 30%;
+  margin-left: 25%;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+
 }
 
 .alingBtn {
-  /* padding: 10px 20px; */
   background-color: #f8f9fa;
   box-shadow: 0 0 10px rgba(230, 225, 225, 0.5);
   color: #333;
@@ -94,34 +93,15 @@ div:hover:after {
   align-items: center;
   align-content: flex-end;
   padding: 10px;
-  /* height: 80px; */
-  /* padding-top: 26px; */
-  /* padding-left: 100px; */
-  /* font-weight: bold; */
-  /* display: flex; */
-  /* gap: 60px; */
 }
 
 .styleLink {
-  /* text-decoration: none; */
-  /* list-style: none; */
-  /* font-size: 18px; */
-  /* font-weight: 700; */
   text-decoration: none;
-  /* text-transform: uppercase; */
   color: white;
   padding: 15px;
-  /* transition: 0.4s ease; */
-  /* color: white;
-  font-weight: bold;
-  margin-top: 10px;
-  margin: 20px; */
 
 }
 
-/* .styleLink:hover {
-  color: #6C6B6C;
-  /* background: #6C6B6C; */
 .styleLink:hover {
   color: #333;
 }

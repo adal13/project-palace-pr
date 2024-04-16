@@ -14,12 +14,11 @@
 
     <global-btn btn_global="Agregar 2da credecial" class="btn_create2Credent" @click="createdCredSecond()" />
 
-    <!-- <v-btn color="primary" @click="showMenu = !showMenu">Mostrar</v-btn> -->
     <v-btn class="btn_credential" id="menu-activator" color="primary">Credenciales</v-btn>
     <v-menu activator="#menu-activator">
         <v-list>
             <v-list-item v-for="(secret, index) in dataStore.dataSecretIAM" :key="index" @click="toggleInfo">
-                <v-list-item-title @click="toggleInfo, handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
+                <v-list-item-title @click="handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
             index + 1
         }}</v-list-item-title>
             </v-list-item>
@@ -28,30 +27,21 @@
 
 
 
-    <!-- <v-btn v-if="dataStore.role === 'ADMIN'" class="btn_delete" color="red" -->
     <v-btn class="btn_delete" color="red" @click="handleDeleteSelectedKeys">Eliminar</v-btn>
 
-    <!-- <v-btn v-if="dataStore.role === 'ADMIN'" color="yellow" btn_global="Rotar" class="RotDate" -->
     <v-btn color="yellow" btn_global="Rotar" class="RotDate" @click="handleRotate">Rotar</v-btn>
 
     <div class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
-        <!-- <v-btn v-if="dataStore.role === 'ADMIN'" :color="buttonColor(index)" v-show="activeIndex === index" -->
-        <v-btn :color="buttonColor(index)" v-show="activeIndex === index" class="ActDate"
-            @click="ActDesctAccesKey(index)" :disabled="!secret.secret_access_key">{{ secret.status ===
+
+        <v-btn v-if="dataStore.role === 'ADMIN'" :color="buttonColor(index)" v-show="activeIndex === index && showMenu"
+            class="ActDate" @click="ActDesctAccesKey(index)">{{ secret.status ===
             'Active' ?
             'Desactivar' : 'Activar' }}</v-btn>
     </div>
 
     <div class="container_table">
         <table class="style_table" id="tableIAM">
-            <!-- <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead> -->
+
             <tbody class="tbody_style">
                 <!-- Datos de usuario -->
                 <tr>
@@ -70,14 +60,14 @@
                 <td v-show="showMenu">AccessKey</td>
                 <td v-show="showMenu">
                     <tr class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
-                        <button rowspan="1" v-show="activeIndex === index">{{ secret.iam_access_key }}</button>
+                        <button rowspan="1" v-if="activeIndex === index">{{ secret.iam_access_key }}</button>
                     </tr>
                 </td>
                 <tr>
                     <td v-show="showMenu">SecretKey</td>
                     <td>
                 <tr v-show="showMenu" class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
-                    <button rowspan="1" v-show="activeIndex === index">{{ secret.secret_access_key }}</button>
+                    <button rowspan="1" v-if="activeIndex === index">{{ secret.secret_access_key }}</button>
                 </tr>
                 </td>
                 </tr>
@@ -96,27 +86,24 @@ import { Amplify } from 'aws-amplify';
 import { onMounted, ref } from 'vue';
 import { globalBtn } from '../../importFile';
 import { IduserIAM, secretUserIAM } from '../../types/index';
-import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../mensaje'
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
 
 Amplify.configure(amplifyConfig);
 
 
 const dataStore = usedataStore()
-// const showInfo = ref(true);
-// const Cliente = 
 const client = dataStore.role === 'ADMIN'
 const activeIndex = ref(-1);
 const showMenu = ref(false);
 const selectedKey = ref<string | null>(null);
-// const selectedKey = ref<string[]>([]);
+
 
 function handleShow(accessKey: string | undefined, index: number) {
-    // dataStore.reset()
+
     if (accessKey != undefined) {
         console.log('Mostrar', accessKey);
         activeIndex.value = index
         selectedKey.value = accessKey;
-        // selectedKey.value.push(accessKey);
         showMenu.value = false;
     }
 };
@@ -126,10 +113,7 @@ const toggleInfo = () => {
 
 function handleDeleteSelectedKeys() {
     console.log('Eliminar llaves seleccionadas:', selectedKey.value);
-    // selectedKey.value.forEach(accessKey => {
-    //     // selectedKey.value = []
-    //     handleDeleteAccess(accessKey);
-    // });
+
     if (selectedKey.value) {
         handleDeleteAccess(selectedKey.value);
         selectedKey.value = null;  // Limpia la selección después de la operación
@@ -155,8 +139,7 @@ const isActiveCredential = (index: number) => {
 const buttonColor = (index: number) => isActiveCredential(index) ? 'warning' : 'success';
 
 
-const props = defineProps(['UserName', 'emits']);// Usuario seleccionado para edición
-console.log('props', props)
+const props = defineProps(['UserName', 'emits']);
 
 
 const userID = ref<IduserIAM>();
@@ -179,10 +162,8 @@ async function getLogin() {
                 }
             }
         });
-        // dataStore.clearUserIdIAM()
         const { body } = await getUser.response;
         const secret = await body?.json();
-        console.log('constsecret', secret)
 
         if (body) {
             const data = await body.json() as { data?: void };
@@ -198,7 +179,6 @@ async function getLogin() {
         if (secret !== null && typeof secret === 'object' && 'secret' in secret && Array.isArray(secret.secret)) {
             storeSecret.value = secret.secret as unknown as secretUserIAM[]
             dataStore.reset()
-            // dataStore.clearUserIdIAM()
             storeSecret.value.forEach((secretDate) => {
                 dataStore.userSecretIA(
                     secretDate.iam_access_key as string,
@@ -215,7 +195,6 @@ async function getLogin() {
 
     } catch (error) {
         console.log('sin obtener datos', error);
-        console.log('sin obtener datos')
 
     } finally {
 
@@ -230,7 +209,6 @@ async function handleDeleteAccess(iam_access_key?: string) {
 
             const deleteSecretKey = await API.del({
                 apiName: "access_API",
-                // path: `/dev/iam/delete_credential/${props.UserName}/${SecretIAMDel}`,
                 path: `/dev/iam/delete_credential/${props.UserName}/${iam_access_key}`,
             });
 
@@ -241,7 +219,6 @@ async function handleDeleteAccess(iam_access_key?: string) {
                 await deleteSecretKey.response
 
                 const findResponse = await getLogin()
-                mostrarMensajeTempralCredUserIAMs('deleteCredential', 'success')
                 toggleInfo()
                 secretIAM.value.forEach((delSecret) => {
                     dataStore.deleteAccessKey(
@@ -256,13 +233,8 @@ async function handleDeleteAccess(iam_access_key?: string) {
 
         } else {
             console.log('Eliminación cancelada');
-
-            // const findResponse = await getLogin()
-            // return findResponse
             toggleInfo()
-            // selectedKey.value = []
         }
-        console.log('user deleted successfully:', userID);
     } catch (error) {
         mostrarMensajeTempralCredUserIAMs('deleteCredentialErr', 'error')
         console.log('delete call failed: ', error);
@@ -273,7 +245,6 @@ async function handleDeleteAccess(iam_access_key?: string) {
 const creatUserIAM = async (iam_access_key?: string, iam_user_name?: string) => {
     try {
 
-        // const userId = dataStore.id_user
         const restOperationRotate = await API.post({
             apiName: 'access_API',
             path: `/dev/iam/rotateCredential`,
@@ -314,7 +285,6 @@ const ActDesctAccesKey = async (index: number) => {
 
     try {
         // Envio de la solicitud POST para actualizar el accessKey
-
         const restOperationStatus = await API.put({
             apiName: 'access_API',
             path: `/dev/iam/status_credential/${props.UserName}`,
@@ -336,7 +306,6 @@ const ActDesctAccesKey = async (index: number) => {
             } else {
                 mostrarMensajeTempralCredUserIAMs('activateCredential', 'success');
             }
-            // mostrarMensajeTempralCredUserIAMs('activateCredential', 'success')
             return findAllRest
         }
 
@@ -363,7 +332,6 @@ const createdCredSecond = async () => {
 
         if (response.statusCode === 200) {
             const findAllRest = await getLogin()
-            console.log('rotate call succeeded');
             mostrarMensajeTempralCredUserIAMs('create2Credential', 'success')
             return findAllRest
         }

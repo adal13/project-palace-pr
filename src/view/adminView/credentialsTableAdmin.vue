@@ -23,7 +23,7 @@
       <!-- <form > -->
       <v-dialog v-model="dialog2" max-width="600px">
          <v-card>
-            <v-card-title>Crear Credencial de Usuario IAM</v-card-title>
+            <v-card-title>Crear credencial de usuario IAM</v-card-title>
             <v-card-text>
                <div>
                   <select v-model="selectedUserName" id="user" @change="fillCreatCred">
@@ -50,11 +50,11 @@
    <form @submit.prevent="AddnewUser">
       <v-dialog v-model="dialog3" max-width="600px">
          <v-card>
-            <v-card-title>Crear Usuario IAM</v-card-title>
+            <v-card-title>Crear usuario IAM</v-card-title>
             <v-card-text>
                <div>
                   <input-global title="" type="text" id="userName" v-model="usuarioIAM.userName"
-                     @update:value="newValue => updateIAM('userName', newValue)" name="nombre de usuario" />
+                     @update:value="newValue => updateIAM('userName', newValue)" name="Nombre de usuario" />
                </div>
 
             </v-card-text>
@@ -82,7 +82,7 @@ import { CredentRegistIAM } from '../../types';
 import { userWithOutCredential } from '../../types'
 import { inputGlobal } from '../../importFile';
 import router from '../../router/router';
-import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../mensaje'
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
 
 
 Amplify.configure(amplifyConfig)
@@ -103,7 +103,6 @@ const getIAM = async () => {
       });
       const { body } = await getUser.response;
       const data = await body?.json();
-      console.log('getIAM', data);
 
       if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
          usersIAM.value = data.data as unknown as IduserIAM[];
@@ -151,15 +150,12 @@ async function handleDeleteIAM(UserName: string | number) {
          apiName: "access_API",
          path: `/dev/iam/delete/${UserName}`,
       });
-      console.log('restoperation', restOperation)
 
       const response = await restOperation.response
       if (response.statusCode === 200) {
          usersIAM.value = usersIAM.value.filter((row) => row.UserId !== UserName)
-         console.log('iduser', usersIAM.value)
 
          dataStore.reset()
-         // dataStore.clearUserIds();
          usersIAM.value.forEach((delUser) => {
             dataStore.userIAM(
                delUser.UserId as string,
@@ -187,7 +183,6 @@ async function handleDeleteIAM(UserName: string | number) {
 // visualizar las credenciales de un usuario IAM 
 const handleVisualizeIAM = (UserName: string | number) => {
    const userIAM = usersIAM.value.find(userIAM => userIAM.UserName === UserName)
-   console.log('usuarios seleccionado', userIAM)
    if (UserName) {
       router.push({
          name: 'visualizeCredIAM',
@@ -227,10 +222,8 @@ async function getUsersIAM() {
 
       const { body } = await getUser.response;
       const data = await body?.json();
-      console.log('APPI', data);
       if (data !== null && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
          userListWhitoutCred.value = data.data as unknown as userWithOutCredential[];
-         // dataStore.clearUserIds();
          console.log('usuario sin crdencial', userListWhitoutCred.value)
          userListWhitoutCred.value.forEach((IAMcredential) => {
             dataStore.CreadwhitOutCredentialIAM(
@@ -239,7 +232,6 @@ async function getUsersIAM() {
             )
 
          });
-         // return getUsers
       } else {
          userListRegIAM.value = []
       }
@@ -255,23 +247,22 @@ async function getUsersIAM() {
 
 
 const fillCreatCred = () => {
-   // dataStore.reset()
    const selectedUser = userListWhitoutCred.value.find(user => user.UserName === selectedUserName.value);
    if (selectedUser) {
       creatIAM.value.UserName = selectedUser.UserName;
-      // creatIAM.value.UserName = ''
+
    }
 };
 
 // Resetear el formulario y cualquier estado relacionado
 function resetDialogData() {
    selectedUserName.value = '';
-   creatIAM.value.UserName = '';  // Asegúrate de limpiar también aquí si es necesario
+   creatIAM.value.UserName = '';
 }
 
 const closeDialog = () => {
    dialog2.value = false;
-   resetDialogData(); // Llama a reset aquí para asegurarte de que todo se limpia
+   resetDialogData();
 };
 
 
@@ -292,13 +283,9 @@ const creatUserIAM = async () => {
       const response = await restOperationPut.response
 
       if (response.statusCode === 200) {
-
-         // dataStore.reset()
          const getUserIAMref = await getIAM()
          mostrarMensajeTempralCredUserIAMs('credential', 'success');
-         // dialog2.value = false; // Cierra la ventana modal
          closeDialog()
-         // dataStore.reset()
          return getUserIAMref
       }
 
@@ -306,7 +293,6 @@ const creatUserIAM = async () => {
       console.log('create call failed: ', error);
       dialog2.value = false
       mostrarMensajeTempralCredUserIAMs('createErrCredential', 'error');
-      // mostrarMensajeTempralCredUserIAMs('createErrCredential')
 
    } finally {
 
@@ -318,15 +304,12 @@ const listenUserIAM = (fielName: string, value: string) => {
 }
 onMounted(() => {
    getUsersIAM();
-   // creatUserIAM()
 })
 
 const CreateCredential = async (fielName: string, value: string) => {
    listenUserIAM(fielName, value)
    await creatUserIAM()
-   // const getUserRefIam = await getUsersIAM()
    router.push('/credentials')
-   // return getUserRefIam
 }
 
 function AddnewCredUserIAM() {
@@ -364,7 +347,6 @@ const createUserIAM = async () => {
 
       const response = await restOperationPost.response
       if (response.statusCode === 200) {
-         // mensajeCredUserIAM.value = 'Usuario IAM creado con exito'
          mostrarMensajeTempralCredUserIAMs('successCreateIAM', 'success');
          dialog3.value = false
 
@@ -385,7 +367,6 @@ const createUserIAM = async () => {
 };
 const updateIAM = (fielName: string, value: string) => {
    usuarioIAM.value.userName = { ...usuarioIAM.value.userName, [fielName]: value }
-   console.log('datos agregados', usuarioIAM.value.userName)
 }
 
 // enviar los datos del formulario a mi store 
@@ -395,7 +376,6 @@ function AddnewUser() {
          userName: usuarioIAM.value.userName,
       }
    })
-   console.log('usuario agregado', AddnewUser)
 };
 
 
@@ -422,7 +402,6 @@ h1 {
    background-color: rgb(20, 84, 116, 0.2);
 }
 
-/* Estilos del contenido de la modal */
 .modal-content {
    align-items: center;
    background-color: #fefefe;
@@ -431,8 +410,8 @@ h1 {
    border: 1px solid #888;
    width: 80%;
    max-width: 700px;
-   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-   /* Sombra */
+   box-shadow: 0 4px 8px rgb(20, 84, 116, 0.2);
+
 }
 
 

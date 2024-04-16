@@ -13,14 +13,16 @@ export interface IduserIAM {
     CreateDate?: string,
     Status?: string,
     dateExpiration?: string,
-    secretAcces?: string
+    secretAcces?: string,
+    isVisible?: boolean
 };
 export interface secretUserIAM {
 
     iam_user_name?: string,
     iam_access_key?: string,
     secret_access_key?: string,
-    status?: string
+    status?: string,
+    isVisible?: boolean;
 };
 export interface userWithOutCredential {
     UserId?: string | number,
@@ -59,21 +61,6 @@ export interface UserData {
         };
     };
 }
-
-// export interface userResponsible {
-//     data: {
-//         id:number,
-//         user: string,
-//         credential: 
-//         {
-//             id:number,
-//             iam_user_name: string,
-//             status: string,
-//             date_delete: string,
-//         }
-//     };
-
-// }
 
 export interface userResponsible {
     id: number,

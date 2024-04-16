@@ -32,8 +32,6 @@ export const usedataStore = defineStore({
 
         // creacion de usuarios IAM 
         creatUserIAM: [{ UserName: '' }],
-
-
         creatCrentRegIAM: [{ UserName: '' }],
 
 
@@ -158,25 +156,8 @@ export const usedataStore = defineStore({
                 dateExpiration,
 
             })
-            // console.error('dato erroneo', UserName)
 
         },
-        //    userResponsible(user: string,credential: string, iam_user_name: string, status: string, date_delete:string, ) {
-        //     this.dataResponsible.push({
-        //         user,
-        //         credential: [
-
-        //             status,
-        //             date_delete,
-        //         ]
-
-
-        //     })
-        // },
-
-        // userResponsible(dataResponsible:userResponsible[], dataCredential:credential[]) {
-        //     this.dataResponsible.push(inputValue)
-        // },
 
         userResponsible(data: userResponsible[]) {
             this.dataResponsible = data;
@@ -196,7 +177,6 @@ export const usedataStore = defineStore({
                 UserName,
 
             })
-            // console.error('dato erroneo', UserName)
 
         },
         //   guardar datos de nuevas credenciales 
@@ -213,23 +193,10 @@ export const usedataStore = defineStore({
             })
         },
 
-
-        // iniciarSesion(usuario: null) {
-        //     // checar dataUser , puedo que se camibie por datosUsuario 
-        //     const { rol, ...dataUsers } = iniciarSesion(usuario);
-
-        //     this.setUsuario(dataUsers);
-        //     this.setRol(rol);
-        // },
-
-
         setUsuario(usuario: null) {
             this.usuario = usuario
         },
 
-        // setRol(rol: null) {
-        //     this.role = rol;
-        // },
 
         setLoggedIn(role: string, id_user: number) {
             // this.isLoggedIn = isLoggedIn
