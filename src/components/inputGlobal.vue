@@ -1,12 +1,11 @@
 <template>
     <div>
         <v-responsive max-width="100%">
-            <v-text-field @blur="handleBlur" :label="name" :pattern="pattern" :type="type" :rules="[rules.required]"
-                variant="outlined" v-model="inputValue" @input="listenInput" :class="classInput" single-line>
+            <v-text-field @blur="handleBlur" :label="name" :type="type" :rules="[rules.required]" variant="outlined"
+                v-model="inputValue" @input="listenInput" :class="classInput" single-line>
                 <label for="">{{ props.title }}</label>
             </v-text-field>
         </v-responsive>
-        <span v-if="errorMessage" class="error-message">{{ errorMessage }}</span>
     </div>
 </template>
 
@@ -32,7 +31,6 @@ const props = defineProps({
 })
 
 const inputValue = ref(props.value)
-const errorMessage = ref<string | null>(null);
 const emit = defineEmits();
 emit('update:value', inputValue.value)
 
@@ -43,7 +41,6 @@ const listenInput = (event: Event) => {
     inputValue.value = newValue
     emit('update:value', newValue)
 
-    validate()
 }
 
 watch(
@@ -56,19 +53,6 @@ watch(
 const rules = {
     required: (value: string) => !!value || 'campo requerido'
 }
-
-const handleBlur = () => {
-    if (props.handleBlur) {
-        // Si se proporciona una función para manejar el evento blur, llámala
-        props.handleBlur();
-    }
-};
-const validate = () => {
-    errorMessage.value = props.pattern ? (props.pattern.test(inputValue.value as string) ? null : 'Formato inválido') : null;
-};
-
-
-
 
 </script>
 

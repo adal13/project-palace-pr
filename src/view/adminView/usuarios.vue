@@ -18,20 +18,18 @@
         <v-card-text>
           <div>
             <input-global title="" type="text" id="UserName" v-model="UsuarioAgr.user"
-              @update:value="newValue => updateI('user', newValue)" name="nombre de usuario" :handle-blur="validateText" />
+              @update:value="newValue => updateI('user', newValue)" name="nombre de usuario" @input="validateText" />
             <span v-if="textErrorMessage" class="error-message">{{ textErrorMessage }}</span>
           </div>
           <div>
             <input-global title="" type="email" id="UserEmail" v-model="UsuarioAgr.email"
-              @update:value="newValue => updateI('email', newValue)" name="email" :handle-blur="validateEmail" />
+              @update:value="newValue => updateI('email', newValue)" name="email" @input="validateEmail" />
             <span v-if="emailErrorMessage" class="error-message">{{ emailErrorMessage }}</span>
           </div>
           <div>
             <input-global title="" type="password" id="password" v-model="UsuarioAgr.password"
-              @update:value="newValue => updateI('password', newValue)" name="password"
-              :handle-blur="validatePassword" />
-
-            <span v-if="passwordErrorMessage" class="error-message">{{ emailErrorMessage }}</span>
+              @update:value="newValue => updateI('password', newValue)" name="password" @input="validatePassword" />
+            <span v-if="passwordErrorMessage" class="error-message">{{ passwordErrorMessage }}</span>
           </div>
           <div>
             <!-- <UserRol type="text" id="UserRol" v-model="UsuarioAgr.role" /> -->
@@ -50,6 +48,7 @@
           <!-- <v-btn color="primary" @click="agregarCredencial">Guardar</v-btn> -->
           <v-btn @click="dialog = false">Cancelar</v-btn>
         </v-card-actions>
+        <span class="error_message_valid"> {{ errorMessage }} </span>
       </v-card>
     </v-dialog>
   </form>
@@ -70,7 +69,7 @@ import router from '../../router/router';
 import { inputGlobal } from '../../importFile';
 import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
 import { validateEmails, validatePasswords, validateTextOnlys } from '../helper/fieldValidate';
-// import { isText, isValidPassword, isValidEmail } from '../helper/fieldValidate';
+import { ValidationResult } from '../helper/fieldValidate';
 
 Amplify.configure(amplifyConfig);
 const dataStore = usedataStore()
@@ -78,57 +77,72 @@ dataStore.id_user
 const userId = dataStore.id_user
 console.log('id de usuario local', userId)
 
+const errorMessage = ref('');
 
-const email = ref('');
+
 const emailErrorMessage = ref('');
+const validateEmail = (input: InputEvent | string | undefined): ValidationResult => {
+  let inputValue: string | undefined;
 
-const password = ref('');
-const passwordErrorMessage = ref('');
+  if (typeof input === 'string') {
+    inputValue = input;
+  } else if (input instanceof InputEvent) {
+    inputValue = (input.target as HTMLInputElement).value;
+  } else {
+    inputValue = undefined;
+  }
 
-const text = ref('');
-const textErrorMessage = ref('');
+  if (!inputValue || !inputValue.trim()) {
+    return { isValid: true, message: '' }; // Retorna válido si no hay valor o está vacío
+  }
 
-const validateEmail = () => {
-  const result = validateEmails(email.value);
+  const result = validateEmails(inputValue);
   emailErrorMessage.value = result.isValid ? '' : result.message;
+  return result;
 };
 
-const validatePassword = () => {
-  const result = validatePasswords(password.value);
+const passwordErrorMessage = ref('');
+const validatePassword = (input: InputEvent | string | undefined): ValidationResult => {
+
+  let inputValue: string | undefined;
+
+  if (typeof input === 'string') {
+    inputValue = input;
+  } else if (input instanceof InputEvent) {
+    inputValue = (input.target as HTMLInputElement).value;
+  } else {
+    inputValue = undefined;
+  }
+
+  if (!inputValue || !inputValue.trim()) {
+    return { isValid: true, message: '' }; // Retorna válido si no hay valor o está vacío
+  }
+
+  const result = validatePasswords(inputValue);
   passwordErrorMessage.value = result.isValid ? '' : result.message;
+  return result;
 };
 
-const validateText = () => {
-  const result = validateTextOnlys(text.value);
+const textErrorMessage = ref('');
+const validateText = (input: InputEvent | string | undefined): ValidationResult => {
+  let inputValue: string | undefined;
+
+  if (typeof input === 'string') {
+    inputValue = input;
+  } else if (input instanceof InputEvent) {
+    inputValue = (input.target as HTMLInputElement).value;
+  } else {
+    inputValue = undefined;
+  }
+
+  if (!inputValue || !inputValue.trim()) {
+    return { isValid: true, message: '' }; // Retorna válido si no hay valor o está vacío
+  }
+
+  const result = validateTextOnlys(inputValue);
   textErrorMessage.value = result.isValid ? '' : result.message;
+  return result;
 };
-// validationUtils.ts
-
-// const emailPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// const passwordPattern: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
-// const textOnlyPattern: RegExp = /^[A-Za-z\s]+$/;
-
-
-
-// const props = {
-//   title: String,
-//   id: String,
-// };
-
-// const result = isValidEmail('adal13gomez.agg@gmail.com');
-// if (result.isValid) {
-//   console.log('El valor es válido.');
-// } else {
-//   console.log('Error:', result.message);
-// }
-
-// const value = ref('');
-// const errorMessage = ref<string | null>(null);
-
-// const validate = () => {
-//   const result = isValidEmail(value.value);
-//   errorMessage.value = result.isValid ? null : result.message;
-// };
 
 const idUsers = ref<IdUsuario[]>([])
 // llamar la API   
@@ -256,8 +270,25 @@ const UsuarioAgr = ref<IdUsuario>({
   role: '',
 });
 
+// let mensaje;
+
 const createUser = async () => {
   try {
+    const userValidationResult = validateText(UsuarioAgr.value.user);
+    const emailValidationResult = validateEmail(UsuarioAgr.value.email);
+    const passwordValidationResult = validatePassword(UsuarioAgr.value.password);
+
+    // Verificar si alguna validación falla
+    if (!userValidationResult.isValid || !emailValidationResult.isValid || !passwordValidationResult.isValid) {
+      // Mostrar mensaje de error y evitar enviar la solicitud
+      errorMessage.value = 'Los datos del usuario no son válidos.';
+      setTimeout(() => {
+        errorMessage.value = ''; // Limpiar el mensaje después de 3 segundos
+      }, 3000);
+      // mostrarMensajeTempralCredUserIAMs('validateInput', 'error')
+      return;
+    }
+
 
     const userBody = {
       user: UsuarioAgr.value.user as string,
@@ -419,5 +450,18 @@ function AddnewUser() {
 .input-select option {
   background-color: #fff;
   color: #145474;
+}
+
+.error-message {
+  font-size: 12px;
+  text-transform: none;
+  margin-bottom: -10%;
+  font-family: Arial;
+  color: red
+}
+
+.error_message_valid {
+  color: red;
+  text-align: center;
 }
 </style>

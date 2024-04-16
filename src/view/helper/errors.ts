@@ -38,7 +38,7 @@ export const errorMessages = {
 
      // 
      asignedUser: "Se ha asignado correctamente el usuario",
-     asignedUserError: "No se ha asignado el usuario correctamente"
+     asignedUserError: "No se ha asignado el usuario correctamente",
 
-     // createUserError: "Usuario creado con exito",
+     validateInput: "Los datos del usuario no son válidos ",
 } as const

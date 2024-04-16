@@ -29,8 +29,8 @@
                   <select v-model="selectedUserName" id="user" @change="fillCreatCred">
                      <option value="">Seleccione un usuario...</option>
                      <option v-for="(dato, index) in userListWhitoutCred" :key="index" :value="dato.UserName">{{
-      dato.UserName
-   }}
+                        dato.UserName
+                     }}
                      </option>
                   </select>
                </div>
@@ -54,7 +54,9 @@
             <v-card-text>
                <div>
                   <input-global title="" type="text" id="userName" v-model="usuarioIAM.userName"
-                     @update:value="newValue => updateIAM('userName', newValue)" name="nombre de usuario" />
+                     @update:value="newValue => updateIAM('userName', newValue)" name="nombre de usuario"
+                     @input="validateText" />
+                  <span v-if="textErrorMessage" class="error-message">{{ textErrorMessage }}</span>
                </div>
 
             </v-card-text>
@@ -64,6 +66,7 @@
                </div>
                <v-btn @click="dialog3 = false">Cancelar</v-btn>
             </v-card-actions>
+            <span class="error_message_valid">{{ errorMessage }}</span>
          </v-card>
       </v-dialog>
    </form>
@@ -83,11 +86,37 @@ import { userWithOutCredential } from '../../types'
 import { inputGlobal } from '../../importFile';
 import router from '../../router/router';
 import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
+import { validateTextOnlys } from '../helper/fieldValidate';
+import { ValidationResult } from '../helper/fieldValidate';
 
 
 Amplify.configure(amplifyConfig)
 const dataStore = usedataStore()
 const usersIAM = ref<IduserIAM[]>([])
+
+
+const errorMessage = ref('');
+const textErrorMessage = ref('');
+const validateText = (input: InputEvent | string | undefined): ValidationResult => {
+   let inputValue: string | undefined;
+
+   if (typeof input === 'string') {
+      inputValue = input;
+   } else if (input instanceof InputEvent) {
+      inputValue = (input.target as HTMLInputElement).value;
+   } else {
+      inputValue = undefined;
+   }
+
+   if (!inputValue || !inputValue.trim()) {
+      return { isValid: true, message: '' }; // Retorna válido si no hay valor o está vacío
+   }
+
+   const result = validateTextOnlys(inputValue);
+   textErrorMessage.value = result.isValid ? '' : result.message;
+   return result;
+};
+
 
 // obtencion de usuariosIAM desde JSON
 const getIAM = async () => {
@@ -346,7 +375,7 @@ function AddnewCredUserIAM() {
 const dialog3 = ref(false);
 
 interface UsuarioAgrIAM {
-   userName: String
+   userName: string
 };
 const usuarioIAM = ref<UsuarioAgrIAM>({
    userName: ''
@@ -354,11 +383,29 @@ const usuarioIAM = ref<UsuarioAgrIAM>({
 
 const createUserIAM = async () => {
    try {
+
+      const userValidationResult = validateText(usuarioIAM.value.userName);
+
+      // Verificar si alguna validación falla
+      if (!userValidationResult.isValid) {
+         // Mostrar mensaje de error y evitar enviar la solicitud
+         errorMessage.value = 'Los datos del usuario no son válidos.';
+         setTimeout(() => {
+            errorMessage.value = ''; // Limpiar el mensaje después de 3 segundos
+         }, 3000);
+         // mostrarMensajeTempralCredUserIAMs('validateInput', 'error')
+         return;
+      }
+
+      const userBody = {
+         userName: usuarioIAM.value.userName as string,
+      }
+
       const restOperationPost = await API.post({
          apiName: 'access_API',
          path: '/dev/iam/create',
          options: {
-            body: usuarioIAM.value.userName as string
+            body: userBody
          }
       });
 
@@ -384,7 +431,7 @@ const createUserIAM = async () => {
    }
 };
 const updateIAM = (fielName: string, value: string) => {
-   usuarioIAM.value.userName = { ...usuarioIAM.value.userName, [fielName]: value }
+   usuarioIAM.value = { ...usuarioIAM.value, [fielName]: value }
    console.log('datos agregados', usuarioIAM.value.userName)
 }
 
@@ -478,5 +525,18 @@ h1 {
 .custom-select option {
    background-color: #fff;
    color: #145474;
+}
+
+.error-message {
+   font-size: 12px;
+   text-transform: none;
+   margin-bottom: -10%;
+   font-family: Arial;
+   color: red
+}
+
+.error_message_valid {
+   color: red;
+   text-align: center;
 }
 </style>

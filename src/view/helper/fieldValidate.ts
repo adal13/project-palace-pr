@@ -1,4 +1,4 @@
-interface ValidationResult {
+export interface ValidationResult {
      isValid: boolean;
      message: string;
 }
@@ -11,17 +11,17 @@ export const validateEmails = (value: string): ValidationResult => {
      if (!emailPattern.test(value)) {
           return { isValid: false, message: 'El formato del correo electrónico no es válido.' };
      }
-     return { isValid: true, message: 'El correo electronico es valido' };
+     return { isValid: true, message: '' };
 };
 
 export const validatePasswords = (value: string): ValidationResult => {
      if (!passwordPattern.test(value)) {
           return {
                isValid: false,
-               message: 'La contraseña debe tener al menos 8 caracteres, incluyendo al menos una letra minúscula, una letra mayúscula, un número y un carácter especial.'
+               message: 'La contraseña debe tener al menos 8 caracteres, incluyendo una letra minúscula, mayúscula, número y un carácter especial.'
           };
      }
-     return { isValid: true, message: 'La contraseña cumple con todos los caracteres' };
+     return { isValid: true, message: '' };
 };
 
 export const validateTextOnlys = (value: string): ValidationResult => {
