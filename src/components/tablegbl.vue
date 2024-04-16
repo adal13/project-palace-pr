@@ -4,7 +4,7 @@
       <thead>
         <tr>
           <th v-for="(column, index) in columns" :key="index">{{ column.label }}</th>
-          <th>accion</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <!-- <v-pagination :length="4"> -->

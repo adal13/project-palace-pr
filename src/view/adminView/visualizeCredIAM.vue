@@ -1,9 +1,17 @@
 <template>
+    <div style="cursor: pointer;">
+
+        <router-link v-if="client" to="/credentials">
+            <v-icon class="back-icon">mdi-arrow-left</v-icon>
+        </router-link>
+        <router-link v-else to="/clientView">
+            <v-icon class="back-icon">mdi-arrow-left</v-icon>
+        </router-link>
+    </div>
     <v-alert v-show="mostrarMensajeCredUserIAMs" :type="tipoDeAlerta" dismissible class="fade-out-message">
         {{ mensajeCredUserIAMs }}
     </v-alert>
 
-    <h1>Editar Usuario IAM</h1>
     <global-btn btn_global="Agregar 2da credecial" class="btn_create2Credent" @click="createdCredSecond()" />
 
     <!-- <v-btn color="primary" @click="showMenu = !showMenu">Mostrar</v-btn> -->
@@ -12,8 +20,8 @@
         <v-list>
             <v-list-item v-for="(secret, index) in dataStore.dataSecretIAM" :key="index" @click="toggleInfo">
                 <v-list-item-title @click="toggleInfo, handleShow(secret.iam_access_key, index)">Mostrar Secret Key {{
-                    index + 1
-                }}</v-list-item-title>
+            index + 1
+        }}</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>
@@ -30,8 +38,8 @@
         <!-- <v-btn v-if="dataStore.role === 'ADMIN'" :color="buttonColor(index)" v-show="activeIndex === index" -->
         <v-btn :color="buttonColor(index)" v-show="activeIndex === index" class="ActDate"
             @click="ActDesctAccesKey(index)" :disabled="!secret.secret_access_key">{{ secret.status ===
-                'Active' ?
-                'Desactivar' : 'Activar' }}</v-btn>
+            'Active' ?
+            'Desactivar' : 'Activar' }}</v-btn>
     </div>
 
     <div class="container_table">
@@ -95,7 +103,8 @@ Amplify.configure(amplifyConfig);
 
 const dataStore = usedataStore()
 // const showInfo = ref(true);
-
+// const Cliente = 
+const client = dataStore.role === 'ADMIN'
 const activeIndex = ref(-1);
 const showMenu = ref(false);
 const selectedKey = ref<string | null>(null);
@@ -230,8 +239,7 @@ async function handleDeleteAccess(iam_access_key?: string) {
             if (response.statusCode === 200) {
                 console.log('restoperation', deleteSecretKey)
                 await deleteSecretKey.response
-                // dataStore.reset()
-                // selectedKey.value = []
+
                 const findResponse = await getLogin()
                 mostrarMensajeTempralCredUserIAMs('deleteCredential', 'success')
                 toggleInfo()
@@ -369,8 +377,6 @@ const createdCredSecond = async () => {
             console.log('rotate call failed: ', error);
             mostrarMensajeTempralCredUserIAMs('create2CredentialErr', 'error');
         }
-        // console.log('rotate call failed: ', error);
-        // mostrarMensajeTempralCredUserIAMs('create2CredentialErr', 'error')
     } finally {
 
     }
@@ -378,6 +384,14 @@ const createdCredSecond = async () => {
 
 </script>
 <style scoped>
+.back-icon {
+    margin-left: 30px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+
+/* estilos definidos  */
 .style_table {
     padding: 1%;
     width: 100%;
@@ -391,13 +405,6 @@ const createdCredSecond = async () => {
     width: 30%;
 }
 
-/* .container_table {
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    align-items: center;
-} */
 
 .style_table th,
 .style_table td {
