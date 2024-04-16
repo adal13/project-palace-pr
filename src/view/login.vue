@@ -40,10 +40,7 @@
                 </span>
             </form>
         </div>
-        <!-- simulacio de cargar  -->
-        <div id="loader-container">
-            <div id="loader"></div>
-        </div>
+
     </div>
 
 </template>
@@ -60,7 +57,6 @@ import { Amplify } from 'aws-amplify';
 // import * as amplifyconfig from '../amplifyconfiguration.json'
 import { amplifyConfig } from '../importFile'
 import { usedataStore } from '../store/datoUsuario';
-import { onMounted } from 'vue'
 import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from './helper/mensaje'
 
 
@@ -152,23 +148,6 @@ const togglePasswordVisibility = () => {
 const passwordVisible = false
 
 
-// simulacion de carga 
-const loaderContainer = ref<HTMLElement | null>(null);
-
-onMounted(() => {
-    loaderContainer.value = document.getElementById('loader-container');
-
-    if (loaderContainer.value) {
-        // Mostrar la barra de carga al 100% al cargar la página
-        loaderContainer.value.style.display = 'block';
-        // Simular el tiempo de carga
-        setTimeout(() => {
-            if (loaderContainer.value) {
-                loaderContainer.value.style.display = 'none'; // Ocultar la barra de carga
-            }
-        }, 2000); // Duración de la animación en milisegundos (en este ejemplo, 2 segundos)
-    }
-});
 
 </script>
 

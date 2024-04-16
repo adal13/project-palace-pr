@@ -58,7 +58,7 @@ div {
 
 
 .aling {
-  margin-left: 25%;
+  margin-left: 20%;
   align-content: center;
   align-items: center;
   text-align: center;
