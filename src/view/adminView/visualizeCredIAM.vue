@@ -28,8 +28,8 @@
 
     <div class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
         <!-- <v-btn v-if="dataStore.role === 'ADMIN'" :color="buttonColor(index)" v-show="activeIndex === index" -->
-        <v-btn :color="buttonColor(index)" v-if="activeIndex === index" class="ActDate"
-            @click="ActDesctAccesKey(index)">{{ secret.status ===
+        <v-btn v-if="dataStore.role === 'ADMIN'" :color="buttonColor(index)" v-show="activeIndex === index && showMenu"
+            class="ActDate" @click="ActDesctAccesKey(index)">{{ secret.status ===
                 'Active' ?
                 'Desactivar' : 'Activar' }}</v-btn>
     </div>
@@ -62,14 +62,14 @@
                 <td v-show="showMenu">AccessKey</td>
                 <td v-show="showMenu">
                     <tr class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
-                        <button rowspan="1" v-show="activeIndex === index">{{ secret.iam_access_key }}</button>
+                        <button rowspan="1" v-if="activeIndex === index">{{ secret.iam_access_key }}</button>
                     </tr>
                 </td>
                 <tr>
                     <td v-show="showMenu">SecretKey</td>
                     <td>
                 <tr v-show="showMenu" class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
-                    <button rowspan="1" v-show="activeIndex === index">{{ secret.secret_access_key }}</button>
+                    <button rowspan="1" v-if="activeIndex === index">{{ secret.secret_access_key }}</button>
                 </tr>
                 </td>
                 </tr>
@@ -243,7 +243,7 @@ async function handleDeleteAccess(iam_access_key?: string) {
                 // dataStore.reset()
                 // selectedKey.value = []
                 const findResponse = await getLogin()
-                mostrarMensajeTempralCredUserIAMs('deleteCredential', 'success')
+                // mostrarMensajeTempralCredUserIAMs('deleteCredential', 'success')
                 toggleInfo()
                 secretIAM.value.forEach((delSecret) => {
                     dataStore.deleteAccessKey(

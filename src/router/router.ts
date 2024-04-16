@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
     meta: { showNavbar: false },
   },
   {
-   path: '/Home',
+    path: '/Home',
     name: 'home',
     meta: { requiresAdmin: true, requiresAuth: true, showNavbar: true, role: 'ADMIN' },
     component: () => import('../view/adminView/usuarios.vue')
@@ -101,18 +101,18 @@ router.beforeEach((to, _from, next) => {
     'INVITADO': '/clientView',
   };
 
-  // if (to.path === '/' && isLoggedInValue) {
-  //   const redirectPath = roleRedirect[isRole as keyof RolePaths] || '/';
-  //   return next({ path: redirectPath });
-  // }
+  if (to.path === '/' && isLoggedInValue) {
+    const redirectPath = roleRedirect[isRole as keyof RolePaths] || '/';
+    return next({ path: redirectPath });
+  }
 
-  // if (to.meta.requiresAuth && !isLoggedInValue) {
-  //   return next({ path: '/forbidden' });
-  // }
+  if (to.meta.requiresAuth && !isLoggedInValue) {
+    return next({ path: '/forbidden' });
+  }
 
-  // if (to.meta.role && to.meta.role !== isRole && isLoggedInValue) {
-  //   return next({ path: '/forbidden' });
-  // }
+  if (to.meta.role && to.meta.role !== isRole && isLoggedInValue) {
+    return next({ path: '/forbidden' });
+  }
 
   next();
 

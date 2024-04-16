@@ -13,7 +13,8 @@ export interface IduserIAM {
     CreateDate?: string,
     Status?: string,
     dateExpiration?: string,
-    secretAcces?: string
+    secretAcces?: string,
+    isVisible?: boolean
 };
 export interface secretUserIAM {
 

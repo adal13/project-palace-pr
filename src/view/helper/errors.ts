@@ -19,16 +19,25 @@ export const errorMessages = {
 
      createUser: "Usuario creado con exito",
 
+     // /visualizeCredIAM
      create2Credential: "Se agrego correctamente la segunda credencial.",
      deleteCredential: "Se elimino correctamente la credencial",
      rotateCredential: "La llave fue rotada correctamente",
      activateCredential: "La llave se activo correctamente",
      desactivateCredential: "La llave se desactivo correctamente",
 
+     // /visualizeCredIAM error
      create2CredentialErr: "La segunda credencial no se pudo agregar.",
      deleteCredentialErr: "La credencial no se pudo eliminar",
      rotateCredentialErr: "La llave no se pudo rotar",
-     activateCredentialErr: "La llave no se puedo activar correctamente"
+     activateCredentialErr: "La llave no se puedo activar correctamente",
+
+     // Login
+     messageLoginError: "Error al Iniciar Sesión",
+     messageAuthError: "Usuario y/o contraseña incorrecto",
+
+     // 
+     asignedUser: "Se ha asignado correctamente el usuario"
 
      // createUserError: "Usuario creado con exito",
 } as const
