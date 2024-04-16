@@ -1,5 +1,10 @@
 <template>
     <div class="body">
+        <!-- simulacio de cargar  -->
+        <div id="loader-container">
+            <div id="loader"></div>
+        </div>
+
 
         <div class="img_palace">
             <h2 class="logo-text">Bienvenido</h2>
@@ -59,6 +64,26 @@ import { Amplify } from 'aws-amplify';
 // import * as amplifyconfig from '../amplifyconfiguration.json'
 import { amplifyConfig } from '../importFile'
 import { usedataStore } from '../store/datoUsuario';
+import { onMounted } from 'vue'
+
+
+// simulacion de carga 
+const loaderContainer = ref<HTMLElement | null>(null);
+
+onMounted(() => {
+    loaderContainer.value = document.getElementById('loader-container');
+
+    if (loaderContainer.value) {
+        // Mostrar la barra de carga al 100% al cargar la página
+        loaderContainer.value.style.display = 'block';
+        // Simular el tiempo de carga
+        setTimeout(() => {
+            if (loaderContainer.value) {
+                loaderContainer.value.style.display = 'none'; // Ocultar la barra de carga
+            }
+        }, 2000); // Duración de la animación en milisegundos (en este ejemplo, 2 segundos)
+    }
+});
 
 Amplify.configure(amplifyConfig)
 const dataStore = usedataStore()
@@ -151,6 +176,8 @@ const togglePasswordVisibility = () => {
 };
 
 const passwordVisible = false
+
+
 // togglePasswordVisibility() {
 //   passwordVisible = !this.passwordVisible;
 //     this.passwordFieldType = this.passwordVisible ? 'text' : 'password';
@@ -159,6 +186,52 @@ const passwordVisible = false
 </script>
 
 <style scoped>
+/* simulacion de carga */
+#loader-container {
+    width: 100%;
+    height: 4px;
+    /* Altura de la barra de carga */
+    background-color: #ddd;
+    /* Color de fondo de la barra de carga */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: none;
+    /* Ocultar la barra de carga inicialmente */
+}
+
+/* Estilos para la barra de carga animada */
+#loader {
+    height: 100%;
+    background-color: #007bff;
+    /* Color de la barra de carga */
+    animation: progressAnimation 2s linear forwards;
+    /* Duración y tipo de animación */
+}
+
+/* Animación de la barra de carga */
+@keyframes progressAnimation {
+    0% {
+        width: 0%;
+        /* Ancho inicial de la barra de carga */
+    }
+
+    100% {
+        width: 100%;
+        /* Ancho al 100% al final de la animación */
+    }
+}
+
+
+
+
+
+
+
+
+
+
 .body {
     background-color: #145474;
     min-height: 100vh;
