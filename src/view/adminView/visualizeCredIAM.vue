@@ -12,7 +12,8 @@
         {{ mensajeCredUserIAMs }}
     </v-alert>
 
-    <global-btn btn_global="Agregar 2da credecial" class="btn_create2Credent" @click="createdCredSecond()" />
+    <global-btn btn_global="Agregar 2da credecial" class="btn_create2Credent" @click="createdCredSecond()"
+        v-if="dataStore.role === 'ADMIN'" />
 
     <v-btn class="btn_credential" id="menu-activator" color="primary">Credenciales</v-btn>
     <v-menu activator="#menu-activator">
@@ -27,9 +28,11 @@
 
 
 
-    <v-btn class="btn_delete" color="red" @click="handleDeleteSelectedKeys">Eliminar</v-btn>
+    <v-btn class="btn_delete" color="red" @click="handleDeleteSelectedKeys"
+        v-if="dataStore.role === 'ADMIN'">Eliminar</v-btn>
 
-    <v-btn color="yellow" btn_global="Rotar" class="RotDate" @click="handleRotate">Rotar</v-btn>
+    <v-btn color="yellow" btn_global="Rotar" class="RotDate" @click="handleRotate"
+        v-if="dataStore.role === 'ADMIN'">Rotar</v-btn>
 
     <div class="datesdel" v-for="(secret, index) in dataStore.dataSecretIAM" :key="index">
 
