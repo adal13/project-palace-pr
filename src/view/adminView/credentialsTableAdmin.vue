@@ -134,10 +134,10 @@ const getIAM = async () => {
 
 const columns = [
    { label: 'Usuario IAM', key: 'UserName' },
-   { label: 'Id Usuario', key: 'UserId' },
+   { label: 'Id usuario', key: 'UserId' },
    { label: 'Llave de acceso IAM', key: 'accessKeyId' },
    { label: 'Estado', key: 'Status' },
-   { label: 'Fecha de expiracion', key: 'dateExpiration' },
+   { label: 'Fecha de expiración', key: 'dateExpiration' },
 ];
 
 const dataTable = computed(() => dataStore.dataUsersIAM.slice(1));

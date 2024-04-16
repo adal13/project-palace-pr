@@ -251,7 +251,7 @@ const updateI = (fielName: string, value: string) => {
 const CreateUserLo = async (fielName: string, value: string) => {
   updateI(fielName, value)
   await createUser()
-  router.push('/Users')
+  router.push('/Home')
 
 }
 

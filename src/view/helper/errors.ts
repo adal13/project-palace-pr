@@ -37,7 +37,8 @@ export const errorMessages = {
      messageAuthError: "Usuario y/o contraseña incorrecto",
 
      // 
-     asignedUser: "Se ha asignado correctamente el usuario"
+     asignedUser: "Se ha asignado correctamente el usuario",
+     asignedUserError: "No se ha asignado el usuario correctamente"
 
      // createUserError: "Usuario creado con exito",
 } as const
