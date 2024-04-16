@@ -18,15 +18,20 @@
         <v-card-text>
           <div>
             <input-global title="" type="text" id="UserName" v-model="UsuarioAgr.user"
-              @update:value="newValue => updateI('user', newValue)" name="nombre de usuario" />
+              @update:value="newValue => updateI('user', newValue)" name="nombre de usuario" :handle-blur="validateText" />
+            <span v-if="textErrorMessage" class="error-message">{{ textErrorMessage }}</span>
           </div>
           <div>
             <input-global title="" type="email" id="UserEmail" v-model="UsuarioAgr.email"
-              @update:value="newValue => updateI('email', newValue)" name="email" />
+              @update:value="newValue => updateI('email', newValue)" name="email" :handle-blur="validateEmail" />
+            <span v-if="emailErrorMessage" class="error-message">{{ emailErrorMessage }}</span>
           </div>
           <div>
             <input-global title="" type="password" id="password" v-model="UsuarioAgr.password"
-              @update:value="newValue => updateI('password', newValue)" name="password" />
+              @update:value="newValue => updateI('password', newValue)" name="password"
+              :handle-blur="validatePassword" />
+
+            <span v-if="passwordErrorMessage" class="error-message">{{ emailErrorMessage }}</span>
           </div>
           <div>
             <!-- <UserRol type="text" id="UserRol" v-model="UsuarioAgr.role" /> -->
@@ -64,6 +69,8 @@ import { usedataStore } from '../../store/datoUsuario';
 import router from '../../router/router';
 import { inputGlobal } from '../../importFile';
 import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from '../helper/mensaje'
+import { validateEmails, validatePasswords, validateTextOnlys } from '../helper/fieldValidate';
+// import { isText, isValidPassword, isValidEmail } from '../helper/fieldValidate';
 
 Amplify.configure(amplifyConfig);
 const dataStore = usedataStore()
@@ -72,7 +79,56 @@ const userId = dataStore.id_user
 console.log('id de usuario local', userId)
 
 
+const email = ref('');
+const emailErrorMessage = ref('');
 
+const password = ref('');
+const passwordErrorMessage = ref('');
+
+const text = ref('');
+const textErrorMessage = ref('');
+
+const validateEmail = () => {
+  const result = validateEmails(email.value);
+  emailErrorMessage.value = result.isValid ? '' : result.message;
+};
+
+const validatePassword = () => {
+  const result = validatePasswords(password.value);
+  passwordErrorMessage.value = result.isValid ? '' : result.message;
+};
+
+const validateText = () => {
+  const result = validateTextOnlys(text.value);
+  textErrorMessage.value = result.isValid ? '' : result.message;
+};
+// validationUtils.ts
+
+// const emailPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// const passwordPattern: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/;
+// const textOnlyPattern: RegExp = /^[A-Za-z\s]+$/;
+
+
+
+// const props = {
+//   title: String,
+//   id: String,
+// };
+
+// const result = isValidEmail('adal13gomez.agg@gmail.com');
+// if (result.isValid) {
+//   console.log('El valor es válido.');
+// } else {
+//   console.log('Error:', result.message);
+// }
+
+// const value = ref('');
+// const errorMessage = ref<string | null>(null);
+
+// const validate = () => {
+//   const result = isValidEmail(value.value);
+//   errorMessage.value = result.isValid ? null : result.message;
+// };
 
 const idUsers = ref<IdUsuario[]>([])
 // llamar la API   

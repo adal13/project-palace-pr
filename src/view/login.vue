@@ -40,6 +40,9 @@
                 <div class="alingbutton">
                     <global-btn type="submit" btn_global="INICIAR SESIÓN" />
                 </div>
+                <span v-show="mostrarMensajeCredUserIAMs" :type="tipoDeAlerta">
+                    {{ mensajeCredUserIAMs }}
+                </span>
 
             </form>
         </div>
@@ -59,6 +62,7 @@ import { Amplify } from 'aws-amplify';
 // import * as amplifyconfig from '../amplifyconfiguration.json'
 import { amplifyConfig } from '../importFile'
 import { usedataStore } from '../store/datoUsuario';
+import mostrarMensajeTempralCredUserIAMs, { mostrarMensajeCredUserIAMs, mensajeCredUserIAMs, tipoDeAlerta } from './helper/mensaje'
 
 Amplify.configure(amplifyConfig)
 const dataStore = usedataStore()
@@ -129,6 +133,7 @@ const handleLogin = async () => {
 
     } catch (errorMessages) {
         errorMessages = 'Nombre del usuario y/o contraseña incorrecta';
+        mostrarMensajeTempralCredUserIAMs('messageAuthError','error')
         // alert(errorMessages)
     }
 };
