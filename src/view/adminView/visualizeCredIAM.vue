@@ -1,4 +1,5 @@
 <template>
+
     <div style="cursor: pointer;">
 
         <router-link v-if="client" to="/credentials">

@@ -2,8 +2,8 @@ import { defineStore } from 'pinia';
 import { credential, IduserIAM, IdUsuario, secretUserIAM, userResponsible } from '../types';
 // import { IdUsuario } from '../types';
 // import Cookies from 'js-cookie'
-import Cookies from 'js-cookie';
-
+import Cookies from 'universal-cookie';
+const cookies = new Cookies(null, { path: '/' });
 export const usedataStore = defineStore({
     id: 'datos',
     state: () => ({
@@ -54,9 +54,9 @@ export const usedataStore = defineStore({
             UserName: ''
         }],
         datos: [],
-        isLoggedIn: Cookies.get('isLoggedIn') === 'true' || false,
-        role: Cookies.get('role') || '',
-        id_user: Cookies.get('id') || '',
+        isLoggedIn: cookies.get('isLoggedIn') === 'true' || false,
+        role: cookies.get('role') || '',
+        id_user: cookies.get('id') || '',
         //    logeo de usuario 
         //    usuario: null,
         //    rol: null,
@@ -204,19 +204,19 @@ export const usedataStore = defineStore({
             this.id_user = id_user.toString()
             if (role) {
                 this.role = role;
-                Cookies.set('role', role, { SameSite: 'None', expires: 1 });
+                cookies.set('role', role);
             }
-            Cookies.set('id', id_user.toString(), { sameSite: 'None', secure: true })
-            Cookies.set('isLoggedIn', 'true', { expires: 1, sameSite: 'None', secure: true });
+            cookies.set('id', id_user.toString())
+            cookies.set('isLoggedIn', 'true');
         },
 
         logout() {
             this.isLoggedIn = false;
             this.role = ''
             this.id_user = ''
-            Cookies.remove('isLoggedIn');
-            Cookies.remove('role');
-            Cookies.remove('id');
+            cookies.remove('isLoggedIn');
+            cookies.remove('role');
+            cookies.remove('id');
         },
 
     },
