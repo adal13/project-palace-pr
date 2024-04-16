@@ -2,7 +2,7 @@
      <div class="forbidden">
           <h1>403</h1>
           <p>Forbidden!</p>
-          <router-link to="/">Inicie Sesión</router-link>
+          <router-link to="/">Inicio de Sesión</router-link>
      </div>
 </template>
 

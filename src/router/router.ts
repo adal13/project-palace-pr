@@ -1,6 +1,8 @@
 import { RouteRecordRaw, createRouter, createWebHistory } from 'vue-router'
 import login from '../view/login.vue'
 import { usedataStore } from '../store/datoUsuario';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies({ path: '/' });
 
 const routes: RouteRecordRaw[] = [
   {
@@ -82,7 +84,9 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
 
   const dataStore = usedataStore();
-  const isLoggedInValue = dataStore.isLoggedIn;
+
+  // const isLoggedInValue = dataStore.isLoggedIn;
+  const isLoggedInValue = cookies.get('isLoggedIn')
   const isRole = dataStore.role
 
   type RolePaths = {

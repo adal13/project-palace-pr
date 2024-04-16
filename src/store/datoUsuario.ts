@@ -3,7 +3,7 @@ import { credential, IduserIAM, IdUsuario, secretUserIAM, userResponsible } from
 // import { IdUsuario } from '../types';
 // import Cookies from 'js-cookie'
 import Cookies from 'universal-cookie';
-const cookies = new Cookies(null, { path: '/' });
+const cookies = new Cookies({ path: '/' });
 export const usedataStore = defineStore({
     id: 'datos',
     state: () => ({
